@@ -8,6 +8,9 @@ export function readFileSync (file, options = 'utf8') {
   return fs.readFileSync(file, options);
 }
 
+export function readdirSync (file, options = 'utf8') {
+  return fs.readdirSync(file, options);
+}
 export function getCssLinkString (path) {
   return `<link rel="stylesheet" type="text/css" href="/${path}" />`;
 }
@@ -50,18 +53,18 @@ export function normalizeAssets (assets) {
 }
 
 export function getManifest (path) {
-  let indexHtml = fs.readdirSync(path).find(name => name.includes('.html'));
+  let indexHtml = readdirSync(path).find(name => name.includes('.html'));
 
   if (indexHtml)
-    indexHtml = fs.readFileSync(`${path}/${indexHtml}`, 'utf8');
+    indexHtml = readFileSync(`${path}/${indexHtml}`, 'utf8');
 
-  const pwaManifestFileName = fs.readdirSync(path).find(name => name.includes('pwa.manifest.json'));
+  const pwaManifestFileName = readdirSync(path).find(name => name.includes('pwa.manifest.json'));
 
-  const webManifestFileName = fs.readdirSync(path + '/js').find(name => name.includes('manifest'));
+  const webManifestFileName = readdirSync(path + '/js').find(name => name.includes('manifest'));
 
-  const pwaManifest = fs.readFileSync(`${path}/${pwaManifestFileName}`, 'utf8');
+  const pwaManifest = readFileSync(`${path}/${pwaManifestFileName}`, 'utf8');
 
-  const webManifest =  JSON.parse(fs.readFileSync(`${path}/js/${webManifestFileName}`, 'utf8'));
+  const webManifest =  JSON.parse(readFileSync(`${path}/js/${webManifestFileName}`, 'utf8'));
 
   return {
     indexHtml,
@@ -72,15 +75,15 @@ export function getManifest (path) {
   };
 }
 
-export function setupServer (server) {
+export function setupServer (server, publicDir) {
   const {
     indexHtml,
     pwaManifest,
     pwaManifestFileName,
     webManifest,
-  } = fsMethods.getManifest(publicDir);
+  } = getManifest(publicDir);
 
-  server.locals.webAssets = fsMethods.normalizeAssets([
+  server.locals.webAssets = normalizeAssets([
     pwaManifestFileName,
     ...Object.values(webManifest),
   ]);
@@ -93,7 +96,7 @@ export function setupServer (server) {
     return;
   })
   server.use(['/js', '/css'], (req, res, next) => {
-    const file = fsMethods.readFileSync(path.join(publicDir, req.baseUrl, req.path))
+    const file = readFileSync(path.join(publicDir, req.baseUrl, req.path))
     if (file) res.status(200).end(file);
     // TODO: should be 404
     else next();

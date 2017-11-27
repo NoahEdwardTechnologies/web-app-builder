@@ -1,0 +1,115 @@
+.landing {
+  width: 100%;
+  height: 100%;
+
+  h1 {
+    font-size: 34px;
+  }
+  h2 {
+    font-size: 28px;
+  }
+  h3, p {
+    font-size: 22px;
+  }
+  h4, {
+    font-size: 16px;
+  }
+  h5 {
+    font-size: 12px;
+  }
+
+  .header {
+    background-color: rgb(146, 213, 22);
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    > h1 {
+      float: left;
+      font-size: 34px;
+    }
+
+    > h2 {
+      float: right;
+      font-size: 26px;
+    }
+
+    > h1, > h2 {
+      padding: 0 20px;
+      line-height: 80px;
+    }
+  }
+
+  .content {
+    padding: 20px 40px;
+    padding-left: 80px;
+
+    .main {
+      padding-top: 50px;
+      max-width: 400px;
+      float: left;
+      .animation {
+        background-color: rgb(200, 50, 226);
+        width: 150px;
+        height: 100px;
+        display: inline-block;
+        border-radius: 100%;
+        text-align: center;
+        line-height: 100px;
+      }
+
+      .lead {
+        margin-top: 20px;
+        > h2 {
+          display: inline-block;
+          line-height: 50px;
+        }
+        .cta {
+          margin-left: 20px;
+          width: 50px;
+          height: 50px;
+          line-height: 50px;
+          text-align: center;
+          display: inline-block;
+          background-color: rgb(200, 50, 226);
+        }
+      }
+
+      .copy {
+        margin-top: 20px;
+      }
+
+      .name {
+        margin-top: 20px;
+      }
+
+      .title {
+
+      }
+    }
+
+    .big-image {
+      float: right;
+      height: 700px;
+      background-color: rgb(200, 50, 226);
+    }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+:global (.theheader) {
+  &[min-width~="600px"] {
+
+  background-color: black;
+  }
+}

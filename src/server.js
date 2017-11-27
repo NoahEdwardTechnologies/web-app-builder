@@ -4,8 +4,7 @@
 // TODO: add cluster
 // TODO: add strong-cluster-control  http://apidocs.strongloop.com/strong-cluster-control/
 // TODO: add napa.js
-
-import * as fsMethods from './bin/fileSystemMethods';
+import * as fsMethods from 'bin/fileSystemMethods';
 import express from 'express';
 import http from 'http';
 import path from 'path';

@@ -2,19 +2,26 @@
 // https://stylelint.io/user-guide/example-config/
 module.exports = {
   "plugins": [
-      "stylelint-csstree-validator"
+    "stylelint-csstree-validator"
   ],
-  "extends": "stylelint-config-standard",
+  "extends": [
+    "stylelint-config-standard"
+    // "stylelint-config-css-modules"
+  ],
   "rules": {
     "csstree/validator": true,
-    "comment-empty-line-before": [ "always", {
-      "ignore": ["stylelint-commands", "between-comments"],
-    } ],
-
+    "comment-empty-line-before": [
+      "always", {
+        "ignore": [
+          "stylelint-commands",
+          "between-comments"
+        ]
+      }
+    ],
+    "font-family-no-missing-generic-family-keyword": true,
     "block-no-empty": null,
     "color-hex-case": "lower",
     "color-no-invalid-hex": true,
-    "comment-empty-line-before": "always",
     "declaration-block-trailing-semicolon": "always",
     "declaration-colon-space-after": "always",
     "declaration-colon-space-before": "never",
@@ -37,6 +44,8 @@ module.exports = {
     "selector-pseudo-class-parentheses-space-inside": "always",
     "selector-pseudo-element-colon-notation": "double",
     "string-quotes": "single",
-    "unit-whitelist": ["em", "rem", "%", "px", "s", "deg"]
+    "unit-whitelist": [
+      "em", "rem", "%", "px", "s", "deg"
+    ]
   }
-}
+};

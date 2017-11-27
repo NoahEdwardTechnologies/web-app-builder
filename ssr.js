@@ -1,4 +1,7 @@
 /* eslint-disable */
+// TODO: app should not crash on errors but push them to client https://github.com/shama/webpack-stream/blob/master/index.js#L143
+// TODO: source maps not working on node
+
 import _eval from 'eval';
 import express from 'express';
 import path from 'path';
@@ -8,6 +11,7 @@ import webpackConfig from './webpack.config.babel.js';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import fse from 'fs-extra';
+import stylelintRunner from './stylelintRunner';
 
 const
   EMIT_FILES = true,
@@ -21,8 +25,8 @@ const
 if (EMIT_FILES) {
   console.log('emptying ./dist directory & requiring memor-fs');
   fse.emptyDirSync('./dist');
-  require('./src/bin/memoryFs').default;
-}
+
+} else require('./src/bin/memoryFs').default;
 
 function createConfig (type) {
   return webpackConfig({
@@ -107,13 +111,16 @@ function runNodeCompiler () {
       poll: true,
     },
     async (err, stats) => {
-      if (compilerHasErrors(err, 'node')) return;
+      // TODO: dont shutdown on errors
+      // if (compilerHasErrors(err, 'node')) return;
+
       logStatsErrorsAndWarnings(stats, 'node');
       const statsJson = stats.toJson({
         modules: true,
         cached: false,
         chunks: false,
       })
+
       if (statsJson.modules.length) {
         console.log('webpack: node compiler initiating');
         console.log(stats.toString({
@@ -130,6 +137,7 @@ function runNodeCompiler () {
           timings: false,
           warnings: true,
         }));
+
         const startServer = (serverSource) => {
           server = _eval(serverSource, NODE_SERVER_MAIN_FILE, {}, true).default;
           server.on('error', (e) => {
@@ -143,11 +151,20 @@ function runNodeCompiler () {
           })
         }
 
-        const serverSource = stats.compilation.assets[NODE_SERVER_MAIN_FILE].source();
-        if (server) {
-          console.log(`restarting ${NODE_SERVER_MAIN_FILE}`)
-          await server.close(() => startServer(serverSource));
-        } else startServer(serverSource);
+        if (!compilerHasErrors(err, 'node')) {
+          const serverSource = stats.compilation.assets[NODE_SERVER_MAIN_FILE].source();
+
+          if (server) {
+            console.log(`restarting ${NODE_SERVER_MAIN_FILE}`)
+            await server.close(() => startServer(serverSource));
+          } else startServer(serverSource);
+
+          console.log('running stylelint');
+          const errors = await stylelintRunner();
+          // TODO: push to client
+          if (errors) console.error(errors);
+        }
+
       }
     }
   );

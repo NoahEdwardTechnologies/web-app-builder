@@ -3,7 +3,7 @@ import deps from './package.json';
 import optionsConfig from './config/optionsConfig';
 import path from 'path';
 import webpackConfig from './config/webpackConfig';
-import styleLintRules from './.stylelintrc.js';
+import styleLintRules from './stylelint.config.js'; // TODO: remove stylelint and use ./stylelintrunner.js
 import fse from 'fs-extra';
 
 /**
@@ -57,7 +57,7 @@ function mainOptions ({
     sourceMap: true,
     ssr: ssrMode,
     styleRulesConfig: styleLintRules,
-    verbose: true,
+    verbose: false,
     webpackBail: true,
     webpackDir: path.resolve(__dirname, '.'), // loaders + entries are resovled relative to this
   };

@@ -16,6 +16,7 @@ export default function base (
   const getEntry = () => options.isDev && options.isWeb
     ? {
       vendor: [
+        'normalize.css',
         'antd',
         'axios',
         'classnames',
@@ -59,11 +60,11 @@ export default function base (
 
   const getResolve = () => ({
     extensions: ['*', '.js', '.jsx', '.css'],
-    modules: ['.', 'node_modules', options.contentBase]
+    modules: ['.', 'node_modules', options.contentBase],
   });
 
   const getExternals = () => options.isNode
-    ? nodeExternals()
+    ? nodeExternals({ whitelist: ['source-map-support']})
     : [];
 
   const getNode = () => options.isNode
