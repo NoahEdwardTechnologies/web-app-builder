@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "env",
+    "stage-1",
+    "react"
+  ],
+  "plugins": [
+    "import-glob",
+    "transform-async-generator-functions",
+    "transform-class-properties",
+    "transform-function-bind",
+    "transform-object-rest-spread",
+    "transform-runtime",
+  ]
+}
