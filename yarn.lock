@@ -7087,6 +7087,12 @@ postcss-custom-selectors@^4.0.1:
     postcss "^6.0.1"
     postcss-selector-matches "^3.0.0"
 
+postcss-define-function@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-define-function/-/postcss-define-function-0.1.1.tgz#f39a3937267c06750c75f5ecaf886de934139bcd"
+  dependencies:
+    postcss "^5.2.6"
+
 postcss-discard-comments@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/postcss-discard-comments/-/postcss-discard-comments-1.2.1.tgz#851dca6b9354c0fb6316cb1a1048f6f5e3960ad0"
@@ -8959,6 +8965,10 @@ restore-cursor@^2.0.0:
   dependencies:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
+
+rev-hash@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rev-hash/-/rev-hash-2.0.0.tgz#7720a236ed0c258df3e64bec03ec048b05b924c4"
 
 rework-visit@^1.0.0:
   version "1.0.0"

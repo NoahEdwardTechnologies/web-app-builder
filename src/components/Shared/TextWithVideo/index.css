@@ -1,0 +1,40 @@
+@import 'components/App/vars.css';
+/* thanks alot https://codemyui.com/svg-text-mask-video-background/ */
+
+.text-with-video {
+  display: inline-block;
+  height: 50px;
+  margin: 0 20px;
+  max-width: 200px;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+
+  video {
+    width: 100%;
+  }
+
+  svg {
+    height: 100%;
+    left: 0; /* needed for FF, Safari, Edge */
+    position:absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  svg text {
+    font-family: var(--fontheading1);
+    font-size: 70px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  svg rect {
+    fill: white;
+  }
+
+  svg > rect {
+    -webkit-mask: url(#mask);
+    mask: url(#mask);
+  }
+}
