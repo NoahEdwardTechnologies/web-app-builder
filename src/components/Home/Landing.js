@@ -1,14 +1,14 @@
 /* eslint-disable*/
 import React from 'react';
 import styles from './Landing.css';
-
+import netechLogo from './images/netech_transparent.png'
 export class Landing extends React.Component {
 
   render () {
     return (
       <div className={styles.landing}>
-        <div className={`${styles.header} theheader`}>
-          <h1>NETECH</h1>
+        <div className={styles.header}>
+          <img src={netechLogo} width='200'/>
           <h2><a href='#'>Hire Us</a></h2>
         </div>
 

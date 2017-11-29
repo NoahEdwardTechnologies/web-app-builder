@@ -23,7 +23,7 @@ const
   WEB_PORT = 3001;
 
 if (EMIT_FILES) {
-  console.log('emptying ./dist directory & requiring memor-fs');
+  console.log('emptying ./dist directory');
   fse.emptyDirSync('./dist');
 
 } else require('./src/bin/memoryFs').default;
