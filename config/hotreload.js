@@ -10,7 +10,8 @@ export default function hotreload(
   });
 
   const getStats = () => ({
-    assets: true,
+    all: undefined,
+    assets: false,
     chunkModules: false,
     chunks: false,
     colors: true,
@@ -19,7 +20,7 @@ export default function hotreload(
     hash: false,
     modules: false,
     timings: false,
-    warnings: true,
+    warnings: false,
   });
 
   const getSsrPath = () => ssr

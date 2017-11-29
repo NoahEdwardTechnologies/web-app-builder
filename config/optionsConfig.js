@@ -12,7 +12,7 @@ function getCssLoaderConfig ({
     camelCase: true,
     importLoaders: 1,
     localIdentName: isDev ? '[path][name]__[local]' : 'css[hash:base64:5]',
-    minimize: isProd,
+    minimize: false, // TODO: http://cssnano.co/guides/optimisations/
     modules: true,
     sourceMap,
   };
@@ -203,7 +203,7 @@ function getStatsConfig ({
   // include options here
 }) {
   return {
-    assets: true,
+    assets: false,
     assetsSort: 'field',
     cached: false,
     cachedAssets: false,
@@ -216,7 +216,7 @@ function getStatsConfig ({
     env: false,
     errorDetails: true,
     errors: true,
-    hash: true,
+    hash: false,
     maxModules: Infinity,
     modules: false,
     modulesSort: 'field',

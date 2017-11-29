@@ -1,81 +1,74 @@
 /* eslint-disable */
-
-import cssMqpacker from 'css-mqpacker';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import postCssBrowserReporter from 'postcss-browser-reporter';
-import postcssCssnext from 'postcss-cssnext';
-import postCssCurrentSelector from 'postcss-current-selector';
-import postcssImport from 'postcss-import';
-import postcssNested from 'postcss-nested';
-import postCssNestedAncestor from 'postcss-nested-ancestors';
-import postcssRemoveRoot from 'postcss-remove-root';
-import postcssReporter from 'postcss-reporter';
 import webpack from 'webpack';
+import path from 'path';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
   const getCssLoaderName = () => `css-loader${options.isNode ? '/locals': ''}`;
 
-  const getLoaders = () => [
+
+  const getCssLoaders = () => [
     {
       loader: getCssLoaderName(),
-      options: {
-        ...options.cssLoaderConfig,
-      }
+      options: options.cssLoaderConfig,
     },
     // see https://github.com/postcss/postcss-loader
     {
       loader: 'postcss-loader',
       options: {
-        ident: 'postcss',
-        sourceMap: options.sourceMap,
-        syntax: 'postcss-scss',
-        plugins(loader) {
-          const pluginArray = [
-            postcssImport,
-
-            postcssCssnext({
-              ...options.babelTarget,
-            }),
-            postCssNestedAncestor(),
-            postcssNested({
-              preserveEmpty: true,
-            }),
-            postCssCurrentSelector(),
-            postcssRemoveRoot,
-            cssMqpacker({
-              sort: false
-            })
-          ];
-
-          if (options.isDev)
-            pluginArray.push(
-              postcssReporter({throwError: true}),
-              postCssBrowserReporter()
-            )
-
-          return pluginArray;
+        options: {
+          ident: 'postcss',
+          exec: true,
+          sourceMap: options.sourceMap,
+          syntax: 'postcss-scss',
         },
+        plugins () {
+          return [
+
+            require("postcss-import")({ addDependencyTo: webpack }),
+            require("postcss-url")(),
+            require("postcss-cssnext")(options.babelTarget),
+
+            require('postcss-current-selector')(),
+            require('postcss-flexbugs-fixes')(),
+            require('postcss-nested')({ preserveEmpty: true }),
+            require('postcss-nested-ancestors')(),
+            require('postcss-remove-root')(),
+            require('css-mqpacker')(),
+          ]
+          .filter(plugin => plugin)
+          .concat( options.isDev && options.isWeb
+            ? [
+              require('postcss-browser-reporter')(),
+              require('postcss-reporter')({
+                throwError: false,
+                clearAllMessages: true,
+              }),
+            ]
+            : []
+          )
+        }
       }
     },
-    {
-      loader: 'resolve-url-loader',
-      options: {
-        ...options.resolveUrlLoaderConfig,
-      }
-    },
+    // {
+    //   loader: 'resolve-url-loader',
+    //   options: {
+    //     ...options.resolveUrlLoaderConfig,
+    //   }
+    // },
   ];
 
   const cssRules = {
     enforce: 'pre',
-    test:  /\.s?(a|c)ss$/,
+    test:  /\.css$/,
     exclude: /node_modules/,
     use: options.isWeb
       ? ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: getLoaders(),
+          use: getCssLoaders(),
         })
-      : getLoaders()
+      : getCssLoaders()
   };
 
   if (options.env === 'development' && options.isWeb) {
@@ -89,7 +82,7 @@ export default function modules(options) {
         importLoaders: 0,
         modules: false,
         minimize: options.isProd,
-        sourceMap: options.sourceMap,
+        sourceMap: options.isDev,
         localIdentName: '[local]'
       },
     },
@@ -97,7 +90,7 @@ export default function modules(options) {
 
   const cssFromNodeModules = { // dont process with post-css
     enforce: 'pre',
-    test: /\.s?(a|c)ss$/,
+    test: /\.css$/,
     include: /node_modules/,
     use: options.isWeb
       ? ExtractTextPlugin.extract({
@@ -180,7 +173,7 @@ export default function modules(options) {
         loader: urlLoaderString,
         options: {
           ...options.urlLoaderConfig,
-          name: 'fonts/[name].[ext]',
+          name: options.assetFilename,
         }
       }
     ]
@@ -232,7 +225,7 @@ export default function modules(options) {
         loader: fileLoaderString,
         options: {
           limit: 8192,
-          name: 'audio/[name].[ext]',
+          name: options.assetFilename,
         }
       }
     ]
@@ -265,6 +258,7 @@ export default function modules(options) {
         workerRules,
         xmlRules,
       ].filter(rule => rule)
-    }
+    },
+
   };
 };

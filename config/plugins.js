@@ -4,7 +4,6 @@
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import StyleLintPlugin from 'stylelint-webpack-plugin';
 import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
@@ -39,11 +38,6 @@ export default function plugins(options) {
 
   switch (options.env) {
     case 'development': {
-      if (options.isWeb)
-        config.plugins.push(
-          new StyleLintPlugin({ ...options.styleLintPluginConfig })
-        )
-
       config.plugins.push(
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
@@ -52,18 +46,6 @@ export default function plugins(options) {
     }
 
     case 'production': {
-      // TODO: do this with npm script
-      // if (options.isNode || (!options.ssr))
-      //   config.plugins.push(
-      //     // remove dist directory on build
-      //     new CleanWebpackPlugin(
-      //       [options.distDir],
-      //       {
-      //         verbose: true,
-      //         root: options.context
-      //       }
-      //     ),
-      //   )
       config.plugins.push(
         new UglifyJSPlugin(getUglifyJsPluginConfig()),
         new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
@@ -129,6 +111,11 @@ export default function plugins(options) {
     config.plugins.push(
       new ExtractTextPlugin(getExtractTextPluginConfig()),
       new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
+      new webpack.BannerPlugin({
+        banner: 'require("source-map-support").install();',
+        raw: true,
+        entryOnly: false
+      }),
 
     )
 
