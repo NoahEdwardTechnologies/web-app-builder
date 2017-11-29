@@ -16,7 +16,7 @@ export default function base (
   const getEntry = () => options.isDev && options.isWeb
     ? {
       vendor: [
-        'normalize.css',
+        // 'normalize.css', // included in antd
         'antd',
         'axios',
         'classnames',

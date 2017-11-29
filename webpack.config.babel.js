@@ -19,6 +19,7 @@ function mainOptions ({
   port = 3000,
   ssr = true,
 } = {}) {
+  const emittingFiles = JSON.parse(emitFiles);
   const ssrMode = JSON.parse(ssr);
   const getEntry = () => platform === 'web'
     ? './src/client.js'
@@ -28,7 +29,7 @@ function mainOptions ({
     platform === 'web'
     && process.env.NODE_ENV === 'development'
     && ssrMode === false
-    && emitFiles === true
+    && emittingFiles === true
   ) {
     console.log('emptying ./dist directory');
     fse.emptyDirSync('./dist');
@@ -39,10 +40,9 @@ function mainOptions ({
     appTitle: 'Noah Edward Technologies Inc.',
     assetFilename: '[folder]/[name].[ext]',
     context: path.resolve(__dirname, '.'),
-    cssFilename: 'css/[name].[id].css',
     dependencies: Object.keys(deps.dependencies),
     distDir: path.resolve(__dirname, 'dist'), // target directory
-    emitFiles: emitFiles || process.env.NODE_ENV === 'production',
+    emitFiles: emittingFiles || process.env.NODE_ENV === 'production',
     env: process.env.NODE_ENV || 'development',
     host,
     htmlFilename: 'index.html',

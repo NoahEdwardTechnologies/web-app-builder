@@ -1,16 +1,9 @@
-@import 'normalize.css';
-@import 'antd/dist/antd.min.css';
 @import './vars.css';
 
 html,
-body,
-:global( #root ) {
+body {
   height: 100% !important;
   width: 100% !important;
-}
-
-body {
-  font-family: var(--fontcontent1);
 }
 
 h1 {
@@ -31,6 +24,12 @@ h4, {
 
 h5 {
   font-size: 12px;
+}
+
+:global( #root ) {
+  font-family: var(--fontcontent1);
+  height: 100% !important;
+  width: 100% !important;
 }
 
 /* TODO: change this stylelint rule */
