@@ -47,7 +47,7 @@ export default function modules(options) {
             }),
             require('postcss-sprites')({
               relativeTo: 'rule',
-              spritePath: './images/',
+              spritePath: `${options.clientPublicDir}/images/`,
             }),
             require('postcss-write-svg')(),
             require('postcss-remove-root')(),

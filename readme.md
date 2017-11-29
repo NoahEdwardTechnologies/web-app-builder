@@ -7,7 +7,7 @@
 
   - Ant Design
   - Babel
-  - Babel Import Glob (see `src/components/store/api`)
+  - Babel Import Glob (see `src/store/api`)
   - Eslint
   - Express
   - PostCSS
