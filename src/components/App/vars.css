@@ -1,0 +1,9 @@
+:root {
+  --netech-blue: #3DB2EE;
+
+  /*
+    Fonts
+    generally serif for headings, sans-serif for everythign else
+   */
+  --fontcontent1: 'Jura';
+}

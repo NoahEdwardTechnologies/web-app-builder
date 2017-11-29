@@ -26,14 +26,30 @@ export default function modules(options) {
         plugins () {
           return [
 
-            require("postcss-import")({ addDependencyTo: webpack }),
+            require("postcss-import")({
+              addDependencyTo: webpack,
+              addModulesDirectories: [options.contentBase],
+            }),
             require("postcss-url")(),
-            require("postcss-cssnext")(options.babelTarget),
-
+            require("postcss-cssnext")({
+              ...options.babelTarget,
+              features: { // https://github.com/MoOx/postcss-cssnext/blob/master/src/features.js
+                customProperties: false
+              }
+            }),
             require('postcss-current-selector')(),
             require('postcss-flexbugs-fixes')(),
             require('postcss-nested')({ preserveEmpty: true }),
             require('postcss-nested-ancestors')(),
+            require('postcss-css-variables')(),
+            require('postcss-font-magician')({
+              founders: ['google'],
+            }),
+            require('postcss-sprites')({
+              relativeTo: 'rule',
+              spritePath: './images/',
+            }),
+            require('postcss-write-svg')(),
             require('postcss-remove-root')(),
             require('css-mqpacker')(),
           ]
