@@ -1,7 +1,8 @@
 /* eslint-disable */
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import webpack from 'webpack';
 import path from 'path';
+import revHash from 'rev-hash';
+import webpack from 'webpack';
 
 // TODO: split this out to multiple files
 export default function modules(options) {
@@ -25,7 +26,6 @@ export default function modules(options) {
         },
         plugins () {
           return [
-
             require("postcss-import")({
               addDependencyTo: webpack,
               addModulesDirectories: [options.contentBase],
@@ -45,9 +45,28 @@ export default function modules(options) {
             require('postcss-font-magician')({
               founders: ['google'],
             }),
+
             require('postcss-sprites')({
               relativeTo: 'rule',
               spritePath: `${options.clientPublicDir}/images/`,
+              hooks: {
+                //https://github.com/2createStudio/postcss-sprites/blob/master/examples/webpack-hot-load.md
+                //onUpdateRule doesnt work
+                // onUpdateRule: function(rule, token, image) {
+        				// 	// `this` is the webpack loader context
+        				// 	this.addDependency(image.path); // adds a watch to the file
+        				// },
+        				onSaveSpritesheet: function(opts, spritesheet) {
+        					return path.join(
+        						opts.spritePath,
+        						spritesheet.groups.concat([
+                      'sprite', //name of image
+        							revHash(spritesheet.image),
+        							spritesheet.extension
+        						]).join('.')
+        					);
+        				}
+              }
             }),
             require('postcss-write-svg')(),
             require('postcss-remove-root')(),

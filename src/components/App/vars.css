@@ -4,6 +4,10 @@
   /*
     Fonts
     generally serif for headings, sans-serif for everythign else
+
+    we use sans-serif per https://css-tricks.com/sans-serif/
    */
-  --fontcontent1: 'Jura';
+  --fontcontent1: 'Source Serif Pro', Sans-Serif;
+  --fontheading1: 'Poppins', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  --fontheading2: 'Montserrat', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
