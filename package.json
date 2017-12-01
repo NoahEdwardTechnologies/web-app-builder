@@ -1,6 +1,6 @@
 {
   "name": "web-app-builder",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build Web Applications",
   "keywords": [
     "reactjs",
@@ -16,7 +16,7 @@
     "email": "noahedwardhall@gmail.com"
   },
   "license": "MPL-2.0",
-  "author": "noah edward hall <noahedwardhall@gmail.com> (https://twitter.com/noahedwardhall)",
+  "author": "noah edward hall <noahedwardhall@gmail.com> (https://www.linkedin.com/in/noahedwardhall/)",
   "repository": {
     "type": "git",
     "url": "https://github.com/NoahEdwardTechnologies/web-app-builder.git"
