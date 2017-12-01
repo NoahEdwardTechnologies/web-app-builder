@@ -35,13 +35,18 @@ function mainOptions ({
     fse.emptyDirSync('./dist');
   }
 
+  const
+    pathDist = 'dist',
+    pathPrivate = path.join(pathDist, '/private'),
+    pathPublic = path.join(pathDist, '/public');
+
   return {
     appSlogan: 'Creating the future, together',
     appTitle: 'Noah Edward Technologies Inc.',
     assetFilename: '[folder]/[name].[ext]',
     context: path.resolve(__dirname, '.'),
     dependencies: Object.keys(deps.dependencies),
-    distDir: path.resolve(__dirname, 'dist'), // target directory
+    distDir: path.resolve(__dirname, pathDist), // target directory
     emitFiles: emittingFiles || process.env.NODE_ENV === 'production',
     env: process.env.NODE_ENV || 'development',
     host,
@@ -51,6 +56,9 @@ function mainOptions ({
     isNode: platform === 'node',
     isWeb: platform === 'web',
     mainEntry: getEntry(),
+    pathDist,
+    pathPrivate,
+    pathPublic,
     platform,
     port,
     publicPath: '/',

@@ -5,7 +5,7 @@ import {
 } from './action';
 
 // https://github.com/callemall/material-ui/issues/7195#issuecomment-314547601
-import store from 'store-npm';
+import store from 'store';
 
 export default function queries (state = {}, action) {
   switch (action.type) {

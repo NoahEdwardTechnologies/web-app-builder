@@ -12,7 +12,7 @@ import reactHandler from 'api/routeHandlers/reactHandler';
 import setupPublicAssetsHandlers from 'api/routeHandlers/setupPublicAssetsHandlers';
 import setupServerMiddleware from 'api/setupServerMiddleware';
 
-const publicDir = process.env.PUBLIC_DIR;
+const publicDir = path.resolve(process.env.PUBLIC_DIR_PATH);
 const server = express();
 
 setupServerMiddleware(server);
