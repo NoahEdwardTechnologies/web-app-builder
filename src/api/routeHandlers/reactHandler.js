@@ -5,7 +5,7 @@ import AppSSR from 'components/App/Server';
 import createHistory from 'history/createMemoryHistory';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import storeCreator from 'store';
+import storeCreator from 'appstore';
 
 const store = storeCreator(createHistory());
 

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { connect } from 'react-redux'
-import blah from 'store/api/blah/action.js';
+import blah from 'appstore/api/blah/action';
 import Landing from './Landing';
 import React from 'react';
 import styles from './index.css';

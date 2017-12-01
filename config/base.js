@@ -12,14 +12,14 @@ export default function base (
     ? `webpack-hot-middleware/client?name=web&path=http://${host}:${port}/__webpack_hmr`
     : false;
 
-  // TODO: splitout vendor bundle //vendor: options.dependencies,
   const getEntry = () => options.isDev && options.isWeb
     ? {
       vendor: [
-        // 'normalize.css', // included in antd
-        'antd',
+        'antd', // includes normalize.css 7.x
         'axios',
         'classnames',
+        'react-dom',
+        'react-redux',
         'react-router-dom',
         'react-router-redux',
         'react-table',
@@ -27,7 +27,7 @@ export default function base (
         'redux-thunk',
         'redux',
         'reselect',
-        'store-npm',
+        'store',
       ],
       main: [
         'babel-polyfill',

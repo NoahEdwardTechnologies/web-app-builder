@@ -127,35 +127,38 @@ function getWebpackPwaManifestPluginConfig ({
 
 function dynamicOptionsOne ({
   context,
-  distDir,
   env,
   isNode,
+  pathPrivate,
+  pathPublic,
+  pathDist,
   verbose,
 }) {
   return {
     contentBase: path.resolve(context, 'src'), // static file location
     isDev: env === 'development',
     isProd: env === 'production',
-    privateDir: path.resolve(distDir, 'private'),
-    publicDir:isNode ? distDir : path.resolve(distDir, 'public'),
-    clientPublicDir: path.resolve(distDir, 'public'),
+    privateDir: path.resolve(context, pathPrivate),
+    publicDir: path.resolve(context, isNode ? pathDist : pathPublic),
+    clientPublicDir: path.resolve(context, pathPublic),
     webpackProfile: verbose,
   };
 }
 
 function dynamicOptionsTwo ({
   distDir,
+  isNode,
   isProd,
+  isWeb,
+  platform,
   privateDir,
   publicDir,
-  platform,
-  isNode,
 }) {
   return {
     dataPath: path.resolve(distDir, publicDir, 'data'),
     fontsPath: path.resolve(distDir, publicDir, 'fonts'),
     imagePath: path.resolve(distDir, publicDir, 'images'),
-    jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd ? '.[chunkhash]' : ''}.js`, // filename template for entry chunks
+    jsFilename: `${isNode ? '' : 'js/'}${platform}.[name]${isProd && isWeb ? '.[chunkhash]' : ''}.js`, // filename template for entry chunks
     recordsOutputPath: path.resolve(distDir, privateDir, `${platform}.webpack_records.js`),
   };
 }

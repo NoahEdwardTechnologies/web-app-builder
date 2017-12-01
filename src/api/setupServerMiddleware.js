@@ -2,7 +2,6 @@
 
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import errorhandler from 'errorhandler';
 import methodOverride from 'method-override';
 import morgan from 'morgan';
 import helmet from 'helmet';
@@ -22,7 +21,7 @@ export default function setupServerMiddleware (server) {
 
   server.use(helmet());
 
-  if (process.env.NODE_ENV === 'development') server.use(errorhandler());
+  if (process.env.NODE_ENV === 'development') server.use(require('errorhandler')());
 
   // https://expressjs.com/en/resources/middleware/body-parser.html
   // parse application/x-www-form-urlencoded

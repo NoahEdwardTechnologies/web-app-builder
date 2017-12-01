@@ -69,10 +69,10 @@ export default function plugins(options) {
     new ExtractTextPlugin(getExtractTextPluginConfig()),
 
     new webpack.DefinePlugin({
-      'process.env.DIST_DIR': JSON.stringify(options.distDir),
+      'process.env.DIST_DIR_PATH': JSON.stringify(options.pathDist),
       'process.env.NODE_ENV': JSON.stringify(options.env),
-      'process.env.PRIVATE_DIR': JSON.stringify(options.privateDir),
-      'process.env.PUBLIC_DIR': JSON.stringify(options.clientPublicDir),
+      'process.env.PRIVATE_DIR_PATH': JSON.stringify(options.pathPrivate),
+      'process.env.PUBLIC_DIR_PATH': JSON.stringify(options.pathPublic),
       'process.env.SSR': JSON.stringify(options.ssr),
       [`process.env.${options.platform.toUpperCase()}_PORT`]: JSON.stringify(options.port),
      }),

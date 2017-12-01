@@ -10,7 +10,7 @@ import { render, hydrate } from 'react-dom';
 import App from 'components/App/Client';
 import createHistory from 'history/createBrowserHistory';
 import React from 'react';
-import storeCreator from 'store';
+import storeCreator from 'appstore';
 
 const history = createHistory();
 const store = storeCreator(history);
