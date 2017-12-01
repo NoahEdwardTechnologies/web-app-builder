@@ -9,6 +9,7 @@ export class Landing extends React.Component {
   render () {
     return (
       <div className={styles.landing}>
+        
         <div className={styles.header}>
           <TextWithVideo text='NETECH'/>
           <DropdownMenu
@@ -24,15 +25,12 @@ export class Landing extends React.Component {
         <div className={styles.content}>
           <div className={styles.main}>
             <div className={styles.lead}>
-              <h2>Building the future<br />Together</h2>
+              <h2>Building the Future<br />Together</h2>
             </div>
-            <p className={styles.copy}>Living at the intersection of science and magic, I aspire to create something beautiful and novel; learning with peers, working with industry leaders, mentoring those following our footsteps.
-            </p>
-            <p className={styles.copy}>
-             Ensuring our partners meet their goal is our lifeline, what's yours?
+            <p className={styles.copy}>Living at the intersection of science and creativity, I aspire to create something beautiful and novel; learning with peers, working with industry leaders, mentoring those following our footsteps.
             </p>
             <h3 className={styles.name}>Noah Edward Hall</h3>
-            <h4 className={styles.title}>Founder</h4>
+            <h4>Founder</h4>
           </div>
         </div>
 

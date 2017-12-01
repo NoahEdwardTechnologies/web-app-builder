@@ -41,7 +41,7 @@ function mainOptions ({
     pathPublic = path.join(pathDist, '/public');
 
   return {
-    appSlogan: 'Creating the future, together',
+    appSlogan: 'Building the Future, Together',
     appTitle: 'Noah Edward Technologies Inc.',
     assetFilename: '[folder]/[name].[ext]',
     context: path.resolve(__dirname, '.'),

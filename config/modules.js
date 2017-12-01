@@ -26,6 +26,7 @@ export default function modules(options) {
         },
         plugins () {
           return [
+            require('cq-prolyfill/postcss-plugin')(),
             require("postcss-import")({
               addDependencyTo: webpack,
               addModulesDirectories: [options.contentBase],
