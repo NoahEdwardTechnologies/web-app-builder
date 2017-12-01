@@ -13,6 +13,7 @@
         "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
         $(lsb_release -cs) \
         edge"
+      $ sudo apt-get update
     ```
 
 ### post installation steps
