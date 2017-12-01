@@ -32,7 +32,6 @@ export default function plugins(options) {
   });
 
   const getExtractTextPluginConfig = () => ({
-    filename: options.cssFilename,
     ...options.extractTextPluginConfig,
   });
 
@@ -55,6 +54,7 @@ export default function plugins(options) {
     }
   }
 
+  // TODO: complete this
   if (options.http2Server) {
     config.plugins.push(
       new webpack.optimize.AggressiveSplittingPlugin({
@@ -64,11 +64,26 @@ export default function plugins(options) {
     )
   }
 
+  // all envs and platforms
+  config.plugins.push(
+    new ExtractTextPlugin(getExtractTextPluginConfig()),
+
+    new webpack.DefinePlugin({
+      'process.env.DIST_DIR': JSON.stringify(options.distDir),
+      'process.env.NODE_ENV': JSON.stringify(options.env),
+      'process.env.PRIVATE_DIR': JSON.stringify(options.privateDir),
+      'process.env.PUBLIC_DIR': JSON.stringify(options.clientPublicDir),
+      'process.env.SSR': JSON.stringify(options.ssr),
+      [`process.env.${options.platform.toUpperCase()}_PORT`]: JSON.stringify(options.port),
+     }),
+
+    // exports webpack asset manifest in json format
+    new WebpackManifestPlugin({...options.WebpackManifestPluginConfig}),
+
+  );
+
   if ( options.isWeb )
     config.plugins.push(
-      // TODO: move this to all envs section
-      new ExtractTextPlugin(getExtractTextPluginConfig()),
-
       // inject webpack asset manifest into html.head
       // new InlineChunkManifestHtmlWebpackPlugin({
       //   dropAsset: false, // dont create manifest.json -> handled by webpackmanifestplugin
@@ -109,7 +124,6 @@ export default function plugins(options) {
     );
   else if (options.isNode)
     config.plugins.push(
-      new ExtractTextPlugin(getExtractTextPluginConfig()),
       new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
       new webpack.BannerPlugin({
         banner: 'require("source-map-support").install();',
@@ -118,22 +132,6 @@ export default function plugins(options) {
       }),
 
     )
-
-  // all envs and platforms
-  config.plugins.push(
-    new webpack.DefinePlugin({
-      'process.env.DIST_DIR': JSON.stringify(options.distDir),
-      'process.env.NODE_ENV': JSON.stringify(options.env),
-      'process.env.PRIVATE_DIR': JSON.stringify(options.privateDir),
-      'process.env.PUBLIC_DIR': JSON.stringify(options.clientPublicDir),
-      'process.env.SSR': JSON.stringify(options.ssr),
-      [`process.env.${options.platform.toUpperCase()}_PORT`]: JSON.stringify(options.port),
-     }),
-
-    // exports webpack asset manifest in json format
-    new WebpackManifestPlugin({...options.WebpackManifestPluginConfig}),
-
-  );
 
   if (options.emitFiles) {
     config.plugins.push(new WriteFilePlugin());

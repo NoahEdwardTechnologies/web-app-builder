@@ -11,15 +11,15 @@ export default function hotreload(
 
   const getStats = () => ({
     all: undefined,
-    assets: false,
+    assets: !ssr,
     chunkModules: false,
-    chunks: false,
+    chunks: !ssr,
     colors: true,
     errorDetails: true,
     errors: true,
     hash: false,
-    modules: false,
-    timings: false,
+    modules: !ssr,
+    timings: !ssr,
     warnings: false,
   });
 

@@ -1,4 +1,4 @@
-/* TODO: unable to nest selectors */
+@import './css/vars.css';
 
 .layout {
   width: 100%;

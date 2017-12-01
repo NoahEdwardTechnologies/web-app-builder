@@ -17,14 +17,16 @@ expect breaking changes until v1
   - Stylelint
   - Webpack 3
 
-### Core features (TODO: finish this)
+### Core features (TODO: list all features)
 
   - Auto generate sprites from all your images (postcss-sprites)
-  - Auto prefixer for your supported client environments (via browserlist)
+  - Auto prefixer for your supported client environments (via browserslist)
   - Autoload Google Fonts (via postcss font-magician)
   - Hot Module Replacement (both client & server)
   - Server Side Rendering
-  - Dual server + client or Client only dev/production process. E.g., if you're building a static website and dont need the API related devops
+  - Dual server + client or Client only dev/production process.
+    - you're developing a static website
+    - you're focused on the frontend and dont need the backend overhead
   - Ability to not emit any files during development, or to emit all files during development (useful for debugging however I generally dont like to emit anything)
 
 
