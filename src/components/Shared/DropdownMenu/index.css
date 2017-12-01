@@ -1,0 +1,15 @@
+@import 'components/App/css/vars.css';
+
+.link-header {
+  transition: font-size 250ms;
+
+  &:global(:container(300px < width < 420px)) {
+    font-size: 20px;
+  }
+
+  a {
+    color: var(--netech-blue);
+    font-family: var(--fontheading2);
+    text-decoration: none;
+  }
+}

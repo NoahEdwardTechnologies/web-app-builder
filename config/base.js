@@ -18,13 +18,16 @@ export default function base (
         'antd', // includes normalize.css 7.x
         'axios',
         'classnames',
+        'cq-prolyfill',
+        // 'css-element-queries', // use cq-prolyfill instead, but keep this just in case cq-prolyfill has performance issues
         'react-dom',
         'react-redux',
         'react-router-dom',
         'react-router-redux',
-        'react-table',
+        'react-table', // remove this and use antd.table
         'react',
         'redux-thunk',
+        'recompose',
         'redux',
         'reselect',
         'store',

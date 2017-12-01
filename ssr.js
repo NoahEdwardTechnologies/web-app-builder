@@ -138,15 +138,18 @@ function runNodeCompiler () {
           warnings: true,
         }));
 
+        let totalErrors = 0;
         const startServer = (serverSource) => {
           server = _eval(serverSource, NODE_SERVER_MAIN_FILE, {}, true).default;
           server.on('error', (e) => {
             if (e.code === 'EADDRINUSE') {
               console.log('Address in use, retrying...');
-              setTimeout(() => {
-                server.close();
-                server.listen(NODE_PORT, HOST);
-              }, 1000);
+              if (totalErrors < 4)
+                setImmediate(() => {
+                  ++totalErrors;
+                  server.close();
+                  server.listen(NODE_PORT, HOST);
+                }, 1000);
             }
           })
         }
@@ -176,6 +179,6 @@ webCompiler.plugin('done', (stats) => {
   if (!serverInitialized) {
     console.log('Initializing node compiler');
     serverInitialized = true;
-    runNodeCompiler();
+    process.nextTick(runNodeCompiler);
   }
 });

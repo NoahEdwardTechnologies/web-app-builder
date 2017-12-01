@@ -1,8 +1,10 @@
+/* eslint-disable */
 export default function htmlTemplate (params) {
   return `
     <!doctype html>
     <html lang="en">
       <head>
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="description" content="${params.htmlWebpackPlugin.options.metaDescription}">

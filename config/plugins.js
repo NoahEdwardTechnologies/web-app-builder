@@ -8,7 +8,7 @@ import UglifyJSPlugin from 'uglifyjs-webpack-plugin';
 import webpack from 'webpack';
 import WebpackPwaManifest from 'webpack-pwa-manifest';
 import WebpackManifestPlugin from 'webpack-manifest-plugin';
-// import InlineChunkManifestHtmlWebpackPlugin from 'inline-chunk-manifest-html-webpack-plugin';
+import alterHtmlWebpackPlugin from './alterHtmlWebpackPlugin';
 import WriteFilePlugin from 'write-file-webpack-plugin';
 
 export default function plugins(options) {
@@ -84,10 +84,6 @@ export default function plugins(options) {
 
   if ( options.isWeb )
     config.plugins.push(
-      // inject webpack asset manifest into html.head
-      // new InlineChunkManifestHtmlWebpackPlugin({
-      //   dropAsset: false, // dont create manifest.json -> handled by webpackmanifestplugin
-      // }),
 
       new HtmlWebpackPlugin({
         filename: options.htmlFilename,
@@ -97,6 +93,11 @@ export default function plugins(options) {
         chunksSortMode: 'manual',
         ssr: options.ssr,
         ...options.htmlWebpackPluginConfig,
+      }),
+
+      new alterHtmlWebpackPlugin({
+        isDev: options.isDev,
+        ssr: options.ssr,
       }),
 
 

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React from 'react';
 import { Dropdown, Icon } from 'antd';
+import styles from './index.css';
 
 export class DropdownMenu extends React.Component {
   state = {
@@ -24,7 +25,7 @@ export class DropdownMenu extends React.Component {
         visible={this.state.showDropdown}
         trigger={['click']}
       >
-        <h2>
+        <h2 className={styles.linkHeader}>
           <a
             href='#'
             onClick={this.flipShowDropdown}

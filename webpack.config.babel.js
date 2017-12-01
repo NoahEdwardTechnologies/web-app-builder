@@ -6,11 +6,6 @@ import webpackConfig from './config/webpackConfig';
 import styleLintRules from './stylelint.config.js'; // TODO: remove stylelint and use ./stylelintrunner.js
 import fse from 'fs-extra';
 
-/**
- * TODO
- https://github.com/danethurber/webpack-manifest-plugin
- delete webpack info plugin
- */
 
 function mainOptions ({
   emitFiles = false,
@@ -41,7 +36,7 @@ function mainOptions ({
     pathPublic = path.join(pathDist, '/public');
 
   return {
-    appSlogan: 'Creating the future, together',
+    appSlogan: 'Building the Future, Together',
     appTitle: 'Noah Edward Technologies Inc.',
     assetFilename: '[folder]/[name].[ext]',
     context: path.resolve(__dirname, '.'),

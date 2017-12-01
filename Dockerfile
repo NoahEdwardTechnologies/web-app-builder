@@ -6,4 +6,4 @@ COPY dist /app/dist
 ENV NODE_ENV production
 RUN npm install --production
 CMD node dist/node.main.js
-EXPOSE 80
+EXPOSE 3000

@@ -120,8 +120,8 @@ function getWebpackPwaManifestPluginConfig ({
     name: appTitle,
     orientation: 'portrait',
     publicPath,
-    short_name: 'NE Tech',
-    theme_color: '#ea3d94',
+    short_name: 'NETECH',
+    theme_color: '#696969',
   };
 }
 
