@@ -7,6 +7,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 export class ClientApp extends React.Component {
+  componentDidMount () {
+    // https://github.com/ausi/cq-prolyfill/issues/28
+    require('cq-prolyfill')({ preprocess: false });
+  }
   render() {
     return (
       <Provider store={this.props.store}>

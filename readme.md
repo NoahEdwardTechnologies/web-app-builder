@@ -8,19 +8,38 @@ expect breaking changes until v1
   - Ideal for rapid prototyping
   - Ideal copying/pasting our code into your application ;)
 
-## opinions
-### Current
+## notable opinions
+### Core Third Party Modules
 
+#### Frontend
   - Ant Design
-  - Babel
-  - Babel Import Glob (see `src/store/api`)
-  - Docker
-  - Eslint
-  - Express
+  - Axios
+  - Classnames
+  - CQ-Prolyfill
   - PostCSS
   - React
+  - Recompose
+  - Redux
+  - Redux Thunk
+  - Reselect
+  - Method-override
+  - Store (local storage)
+
+#### Backend
+  - Axios
+  - Express
+  - Method-override
+  - Memory-fs
+
+#### Other
+  - Babel
+  - Babel Import Glob (see `src/store/api`)
+  - Browserslist
+  - Docker
+  - Eslint
   - Stylelint
   - Webpack 3
+
 
 ### Core features (TODO: list all features)
 
@@ -33,12 +52,38 @@ expect breaking changes until v1
     - you're developing a static website
     - you're focused on the frontend and dont need the backend overhead
   - Ability to not emit any files during development, or to emit all files during development (useful for debugging however I generally dont like to emit anything)
+  - CSS Next
+  - Container Queries [via cq-prolyfill](https://github.com/ausi/cq-prolyfill/blob/master/docs/usage.md#colors)
+    ```css
+      /*
+        cq-polyfill: recommended,
+        usage in css: apply directly to child class
+        usage in js: in App/Client.js.componentDidMount:
+          require('cq-prolyfill')({ preprocess: false });
+      */
+        .childElement {
+          &:global(:container(width < 400px)) {
+            background-color: black;
+          }
+        }
+
+      /*
+        css-element-queries: not recommended, currently disabled
+        usage in css: apply to parent class
+        usage in js: in SomeComponent.js.componentDidMount:
+          require('css-element-queries/src/ElementQueries').init();
+      */
+      .parentElement {
+        &[min-width~="400px"] h2 {
+          background-color: black
+        }
+      }
+      ```
 
 
 ### Todo
 
   - db-migrate
-  - Element Queries
   - Jest
   - JS + CSS Code Splitting
   - NETECH/babel-preset
