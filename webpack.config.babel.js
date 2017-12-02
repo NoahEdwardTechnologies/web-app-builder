@@ -6,11 +6,6 @@ import webpackConfig from './config/webpackConfig';
 import styleLintRules from './stylelint.config.js'; // TODO: remove stylelint and use ./stylelintrunner.js
 import fse from 'fs-extra';
 
-/**
- * TODO
- https://github.com/danethurber/webpack-manifest-plugin
- delete webpack info plugin
- */
 
 function mainOptions ({
   emitFiles = false,

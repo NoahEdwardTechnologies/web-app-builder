@@ -2,7 +2,26 @@ expect breaking changes until v1
 
   - [view the current app @ www.noahedward.com](http://www.noahedward.com)
 
-# Web Application Builder
+# TLDR;
+## development
+  - `yarn ssr`: start api and client in dev mode
+  - `yarn client`: start client in dev mode
+
+### build for production
+  - `yarn build`: build api and client for production
+  - `yarn buildclient`: build client for production
+  - `yarn buildserver`: build server for production
+
+### dockerize production build
+  1. build app for production `yarn build`
+    - client only: `yarn prodclient`
+    - server only: `yarn prodserver`
+  2. build docker image: `docker build -t YOUR_IMAGE_NAME .`
+  3. launch docker container from image `docker run -p 8082:3000 YOUR_IMAGE_NAME`
+
+
+# About
+## Web Application Builder
 
   - Ideal for senior full stack developers building sophisticated universal web applications
   - Ideal for rapid prototyping
@@ -39,7 +58,6 @@ expect breaking changes until v1
   - Eslint
   - Stylelint
   - Webpack 3
-
 
 ### Core features (TODO: list all features)
 
@@ -95,19 +113,12 @@ expect breaking changes until v1
   - Seamless Immutable
   - sqlite3 (rapid prototyping)
 
-## get started
-### development
-  - `yarn ssr`: start api and client in dev mode
-  - `yarn client`: start client in dev mode
+# Services I use in developing this repository
 
-### build for production
-  - `yarn build`: build api and client for production
-  - `yarn buildclient`: build client for production
-  - `yarn buildserver`: build server for production
-
-### dockerize production build
-  1. build app for production `yarn build`
-    - client only: `yarn prodclient`
-    - server only: `yarn prodserver`
-  2. build docker image: `docker build -t YOUR_IMAGE_NAME .`
-  3. launch docker container from image `docker run -p 8082:3000 YOUR_IMAGE_NAME`
+  - [ready.mobi](https://ready.mobi/)
+  - [Pagespeed insights](https://developers.google.com/speed/pagespeed/)
+  - [w3c validator](https://validator.w3.org/)
+  - [woorank](https://www.woorank.com/)
+  - [wave](http://wave.webaim.org/)
+  - [lighthouse](https://developers.google.com/web/tools/lighthouse/)
+  -
