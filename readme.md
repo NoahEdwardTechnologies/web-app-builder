@@ -13,7 +13,7 @@ expect breaking changes until v1
   - `yarn buildserver`: build server for production
 
 ### dockerize production build
-  0. create nginx conf files in the same dir you will issue the docker run commands `./confs/*.conf`
+  0. create nginx conf files in the same dir you will issue the nginx docker run commands `./confs/*.conf`
       - see `docker/nginx/confs` for example
 
   1. build app for production `yarn build`
