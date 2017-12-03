@@ -26,10 +26,10 @@ expect breaking changes until v1
       - `cd docker/nginx`
       - `docker build -t NGINX_IMAGE_NAME .`
 
-  4. launch docker app container from image
+  4. launch docker app container from image 
       - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
-     
-  5 launch docker nginx container from image
+
+  5 launch docker nginx container from image:
       - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
 
 
