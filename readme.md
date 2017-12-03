@@ -14,18 +14,23 @@ expect breaking changes until v1
 
 ### dockerize production build
   0. create nginx conf files in the same dir you will issue the docker run commands `./confs/*.conf`
-    - see `docker/nginx/confs` for example
+      - see `docker/nginx/confs` for example
+
   1. build app for production `yarn build`
-    - client only: `yarn prodclient`
-    - server only: `yarn prodserver`
+      - client only: `yarn prodclient`
+      - server only: `yarn prodserver`
+
   2. build app docker image: `docker build -t APP_IMAGE_NAME .`
+
   3. build nginx docker image:
-    - `cd docker/nginx`
-    - `docker build -t NGINX_IMAGE_NAME .`
+      - `cd docker/nginx`
+      - `docker build -t NGINX_IMAGE_NAME .`
+
   4. launch docker app container from image
-    - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
+      - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
+     
   5 launch docker nginx container from image
-    - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
+      - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
 
 
 # About
