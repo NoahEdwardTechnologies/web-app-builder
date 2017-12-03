@@ -32,6 +32,9 @@ expect breaking changes until v1
   5 launch docker nginx container from image:
       - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
 
+# Success with using this respository
+  - [Use our Ultimate Atom Config](https://gist.github.com/noahehall/5750b966e5982e86c04fb8edf2bbe3f7)
+    - [install with sync-settings](https://atom.io/packages/sync-settings)
 
 # About
 ## Web Application Builder
