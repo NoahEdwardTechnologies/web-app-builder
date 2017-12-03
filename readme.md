@@ -1,6 +1,6 @@
 expect breaking changes until v1
 
-  - [view the current app @ www.noahedward.com](http://www.noahedward.com)
+  - [view the example app @ www.noahedward.com](http://www.noahedward.com)
 
 # TLDR;
 ## development
