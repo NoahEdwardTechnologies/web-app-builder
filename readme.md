@@ -108,6 +108,19 @@ expect breaking changes until v1
       }
       ```
 
+      /*
+        css-element-queries: not recommended, currently disabled
+        usage in css: apply to parent class
+        usage in js: in SomeComponent.js.componentDidMount:
+          require('css-element-queries/src/ElementQueries').init();
+      */
+      .parentElement {
+        &[min-width~="400px"] h2 {
+          background-color: black
+        }
+      }
+      ```
+
 ### Todo
 
   - db-migrate
