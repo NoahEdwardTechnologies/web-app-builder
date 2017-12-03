@@ -13,11 +13,19 @@ expect breaking changes until v1
   - `yarn buildserver`: build server for production
 
 ### dockerize production build
+  0. create nginx conf files in the same dir you will issue the docker run commands `./confs/*.conf`
+    - see `docker/nginx/confs` for example
   1. build app for production `yarn build`
     - client only: `yarn prodclient`
     - server only: `yarn prodserver`
-  2. build docker image: `docker build -t YOUR_IMAGE_NAME .`
-  3. launch docker container from image `docker run -p 8082:3000 YOUR_IMAGE_NAME`
+  2. build app docker image: `docker build -t APP_IMAGE_NAME .`
+  3. build nginx docker image:
+    - `cd docker/nginx`
+    - `docker build -t NGINX_IMAGE_NAME .`
+  4. launch docker app container from image
+    - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
+  5 launch docker nginx container from image
+    - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
 
 
 # About
@@ -27,7 +35,7 @@ expect breaking changes until v1
   - Ideal for rapid prototyping
   - Ideal copying/pasting our code into your application ;)
 
-## notable opinions
+## Notable Opinions
 ### Core Third Party Modules
 
 #### Frontend
@@ -35,7 +43,7 @@ expect breaking changes until v1
   - Axios
   - Classnames
   - CQ-Prolyfill
-  - PostCSS
+  - PostCSS + CSSNext
   - React
   - Recompose
   - Redux
@@ -46,15 +54,18 @@ expect breaking changes until v1
 
 #### Backend
   - Axios
+  - Docker
   - Express
-  - Method-override
   - Memory-fs
+  - Method-override
+  - NGINX
+  - Google Brotli
+  - Google Pagespeed
 
 #### Other
   - Babel
   - Babel Import Glob (see `src/store/api`)
   - Browserslist
-  - Docker
   - Eslint
   - Stylelint
   - Webpack 3
@@ -70,7 +81,6 @@ expect breaking changes until v1
     - you're developing a static website
     - you're focused on the frontend and dont need the backend overhead
   - Ability to not emit any files during development, or to emit all files during development (useful for debugging however I generally dont like to emit anything)
-  - CSS Next
   - Container Queries [via cq-prolyfill](https://github.com/ausi/cq-prolyfill/blob/master/docs/usage.md#colors)
     ```css
       /*
@@ -98,6 +108,18 @@ expect breaking changes until v1
       }
       ```
 
+      /*
+        css-element-queries: not recommended, currently disabled
+        usage in css: apply to parent class
+        usage in js: in SomeComponent.js.componentDidMount:
+          require('css-element-queries/src/ElementQueries').init();
+      */
+      .parentElement {
+        &[min-width~="400px"] h2 {
+          background-color: black
+        }
+      }
+      ```
 
 ### Todo
 
@@ -107,7 +129,7 @@ expect breaking changes until v1
   - NETECH/babel-preset
   - NETECH/eslint-config
   - NETECH/ReactJS D3 Universal
-  - NGINX Reverse Proxy
+  - Google Analytics
   - PostGReSQL (bigger clients)
   - Protractor + Selenium
   - Seamless Immutable
@@ -121,4 +143,3 @@ expect breaking changes until v1
   - [woorank](https://www.woorank.com/)
   - [wave](http://wave.webaim.org/)
   - [lighthouse](https://developers.google.com/web/tools/lighthouse/)
-  -
