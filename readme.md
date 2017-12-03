@@ -30,7 +30,7 @@ expect breaking changes until v1
       - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
 
   5 launch docker nginx container from image:
-      - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME` 
+      - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
 
 
 # About
@@ -113,18 +113,6 @@ expect breaking changes until v1
       }
       ```
 
-      /*
-        css-element-queries: not recommended, currently disabled
-        usage in css: apply to parent class
-        usage in js: in SomeComponent.js.componentDidMount:
-          require('css-element-queries/src/ElementQueries').init();
-      */
-      .parentElement {
-        &[min-width~="400px"] h2 {
-          background-color: black
-        }
-      }
-      ```
 
 ### Todo
 
