@@ -21,7 +21,7 @@ expect breaking changes until v1
       - server only: `yarn prodserver`
 
   2. build app docker image:
-    ```sh
+    ```sh 
       docker build -f Dockerfile.app \
         -t APP_IMAGE_NAME .
     ```
