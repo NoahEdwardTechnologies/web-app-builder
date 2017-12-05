@@ -23,7 +23,7 @@ expect breaking changes until v1
   2. build app docker image:
     ```sh
       docker build -f Dockerfile.app \
-      -t APP_IMAGE_NAME .
+        -t APP_IMAGE_NAME .
     ```
 
   3. build nginx docker image:
