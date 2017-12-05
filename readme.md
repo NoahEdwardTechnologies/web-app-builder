@@ -4,33 +4,50 @@ expect breaking changes until v1
 
 # TLDR;
 ## development
-  - `yarn ssr`: start api and client in dev mode
+  - `yarn ssr`: start server and client in dev mode
   - `yarn client`: start client in dev mode
 
 ### build for production
-  - `yarn build`: build api and client for production
+  - `yarn build`: build server and client for production
   - `yarn buildclient`: build client for production
   - `yarn buildserver`: build server for production
 
 ### dockerize production build
-  0. create nginx conf files in the same dir you will issue the nginx docker run commands `./confs/*.conf`
-      - see `docker/nginx/confs` for example
+  0. create nginx conf files in  `./nginx/confs/*.conf`
+      - see `./nginx/confs` for example
 
-  1. build app for production `yarn build`
+  1. build seerver & client for production `yarn build`
       - client only: `yarn prodclient`
       - server only: `yarn prodserver`
 
-  2. build app docker image: `docker build -t APP_IMAGE_NAME .`
+  2. build app docker image:
+    ```sh
+      docker build -f Dockerfile.app \
+      -t APP_IMAGE_NAME .
+    ```
 
   3. build nginx docker image:
-      - `cd docker/nginx`
-      - `docker build -t NGINX_IMAGE_NAME .`
+      ```sh
+        docker build -r Dockerfile.nginx \
+        -t NGINX_IMAGE_NAME .
+      ```
 
-  4. launch docker app container from image
-      - `docker run --rm -d -p 8080:3000 --name APP_CONTAINER_NAME APP_IMAGE_NAME`
+  4. launch docker app container from app image
+      ```sh
+        docker run --rm -d \
+          -p 8080:3000 \
+          --name APP_CONTAINER_NAME \
+          APP_IMAGE_NAME
+      ```
 
-  5 launch docker nginx container from image:
-      - `run -d --rm -v $(pwd)/confs:/etc/nginx/conf.d -p 80:80 --name NGINX_CONTAINER_NAME NGINX_IMAGE_NAME`
+  5 launch docker nginx container from nginx image:
+      ```sh
+        docker run -d --rm \
+          -v $(pwd)/nginx/confs:/etc/nginx/conf.d \
+          -p 80:80 \
+          --name NGINX_CONTAINER_NAME \
+          NGINX_IMAGE_NAME
+      ```
 
 # Success with using this respository
   - [Use our Ultimate Atom Config](https://gist.github.com/noahehall/5750b966e5982e86c04fb8edf2bbe3f7)
