@@ -40,7 +40,7 @@ expect breaking changes until v1
           APP_IMAGE_NAME
       ```
 
-  5 launch docker nginx container from nginx image:
+  5. launch docker nginx container from nginx image:
       ```sh
         docker run -d --rm \
           -v $(pwd)/nginx/confs:/etc/nginx/conf.d \
