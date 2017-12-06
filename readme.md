@@ -13,26 +13,34 @@ expect breaking changes until v1
   - `yarn buildserver`: build server for production
 
 ### dockerize production build
-  0. create nginx conf files in  `./nginx/confs/*.conf`
+  0. obtain SSL certifications for https & http/2
+    ```sh
+      # TODO
+    ```
+
+  1. create nginx conf files in  `./nginx/confs/*.conf`
       - see `./nginx/confs` for example
 
-  1. build seerver & client for production `yarn build`
+  2. build seerver & client for production `yarn build`
       - client only: `yarn prodclient`
       - server only: `yarn prodserver`
 
-  2. build app docker image:
-    ```sh 
+  3. build app docker image:
+
+    ```sh
       docker build -f Dockerfile.app \
         -t APP_IMAGE_NAME .
     ```
 
-  3. build nginx docker image:
+  4. build nginx docker image:
+
       ```sh
         docker build -r Dockerfile.nginx \
         -t NGINX_IMAGE_NAME .
       ```
 
-  4. launch docker app container from app image
+  5. launch docker app container from app image
+
       ```sh
         docker run --rm -d \
           -p 8080:3000 \
@@ -40,7 +48,8 @@ expect breaking changes until v1
           APP_IMAGE_NAME
       ```
 
-  5. launch docker nginx container from nginx image:
+  6. launch docker nginx container from nginx image:
+  
       ```sh
         docker run -d --rm \
           -v $(pwd)/nginx/confs:/etc/nginx/conf.d \
@@ -81,11 +90,12 @@ expect breaking changes until v1
   - Axios
   - Docker
   - Express
+  - Google Brotli
+  - Google Pagespeed
+  - Letsencrypt
   - Memory-fs
   - Method-override
   - NGINX
-  - Google Brotli
-  - Google Pagespeed
 
 #### Other
   - Babel
@@ -96,7 +106,10 @@ expect breaking changes until v1
   - Webpack 3
 
 ### Core features (TODO: list all features)
-
+  - nginx reverse proxy with http/2 enabled
+  - letsencrypt ssl certificates
+  - Google Pagespeed enabled
+  - Google Brotli for compression (falls back to gzip for non-supported browsers)
   - Auto generate sprites from all your images (postcss-sprites)
   - Auto prefixer for your supported client environments (via browserslist)
   - Autoload Google Fonts (via postcss font-magician)

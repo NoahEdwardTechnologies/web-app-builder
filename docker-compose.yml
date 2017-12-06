@@ -11,13 +11,10 @@ services:
       entrypoint:
         - /usr/sbin/dnsmasq
         - -d
-        - -p 5353
         - --address=/dev/127.0.0.1
       pid: host
     app:
       container_name: netech-app
-      ports:
-        - 8080:3000
       build:
         context: .
         dockerfile: Dockerfile.app
@@ -25,10 +22,13 @@ services:
         - dnsmasq
       pid: host
       image: noahedwardhall/noahedward:app
+      expose:
+        - 3000
     nginx:
       container_name: netech-nginx
       ports:
-        - 80:80
+        - "80:80"
+        - "443:443"
       pid: host
       volumes:
         - ./nginx/confs:/etc/nginx/conf.d
