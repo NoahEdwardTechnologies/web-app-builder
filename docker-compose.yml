@@ -1,0 +1,42 @@
+version: '3'
+services:
+    dnsmasq:
+      container_name: netech-dnsmasq
+      image: andyshinn/dnsmasq
+      ports:
+        - 53535:53/tcp
+        - 53535:53/udp
+      cap_add:
+        - NET_ADMIN
+      entrypoint:
+        - /usr/sbin/dnsmasq
+        - -d
+        - -p 5353
+        - --address=/dev/127.0.0.1
+      pid: host
+    app:
+      container_name: netech-app
+      ports:
+        - 8080:3000
+      build:
+        context: .
+        dockerfile: Dockerfile.app
+      depends_on:
+        - dnsmasq
+      pid: host
+      image: noahedwardhall/noahedward:app
+    nginx:
+      container_name: netech-nginx
+      ports:
+        - 80:80
+      pid: host
+      volumes:
+        - ./nginx/confs:/etc/nginx/conf.d
+        - /var/run/docker.sock:/tmp/docker.sock
+      image: noahedwardhall/noahedwardhall:nginx
+      build:
+        context: .
+        dockerfile: Dockerfile.nginx
+      depends_on:
+        - dnsmasq
+        - app
