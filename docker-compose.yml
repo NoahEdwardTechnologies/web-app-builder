@@ -1,42 +1,44 @@
 version: '3'
 services:
-    dnsmasq:
-      container_name: netech-dnsmasq
-      image: andyshinn/dnsmasq
-      ports:
-        - 53535:53/tcp
-        - 53535:53/udp
-      cap_add:
-        - NET_ADMIN
-      entrypoint:
-        - /usr/sbin/dnsmasq
-        - -d
-        - --address=/dev/127.0.0.1
-      pid: host
+    discovery:
+      container_name: netech-registrator
+      image: gliderlabs/registrator:master
+      env_file: ./consul/.env
+      network_mode: host
+      command: consul://$CONSUL_HTTP_ADDR
+      volumes:
+        - /var/run/docker.sock:/tmp/docker.sock
+
     app:
       container_name: netech-app
       build:
         context: .
         dockerfile: Dockerfile.app
       depends_on:
-        - dnsmasq
+        - discovery
       pid: host
-      image: noahedwardhall/noahedward:app
+      image: noahedwardhall/noahedward:apptest
       expose:
         - 3000
+      dns: 169.254.1.1
+      env_file: ./consul/.env
+
+
     nginx:
+      dns: 169.254.1.1
+      env_file: ./consul/.env
       container_name: netech-nginx
       ports:
         - "80:80"
-        - "443:443"
+        #- "443:443"
       pid: host
       volumes:
         - ./nginx/confs:/etc/nginx/conf.d
         - /var/run/docker.sock:/tmp/docker.sock
-      image: noahedwardhall/noahedwardhall:nginx
+      image: noahedwardhall/noahedwardhall:nginxtest
       build:
         context: .
         dockerfile: Dockerfile.nginx
       depends_on:
-        - dnsmasq
+        - discovery
         - app

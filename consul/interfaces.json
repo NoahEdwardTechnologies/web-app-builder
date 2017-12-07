@@ -1,0 +1,7 @@
+{
+  "client_addr": "169.254.1.1",
+  "bind_addr": "10.0.0.126",
+  "data_dir": "./data",
+  "server": true,
+  "ui": true
+}
