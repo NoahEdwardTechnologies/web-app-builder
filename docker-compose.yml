@@ -9,6 +9,8 @@ services:
       volumes:
         - /var/run/docker.sock:/tmp/docker.sock
 
+
+
     app:
       container_name: netech-app
       build:
@@ -22,11 +24,16 @@ services:
         - 3000
       dns: 169.254.1.1
       env_file: ./consul/.env
+      environment:
+        - SERVICE_NAME=netech-app
+
 
 
     nginx:
       dns: 169.254.1.1
       env_file: ./consul/.env
+      environment:
+        - SERVICE_NAME=netech-nginx
       container_name: netech-nginx
       ports:
         - "80:80"
