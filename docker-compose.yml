@@ -1,51 +1,67 @@
 version: '3'
 services:
-    discovery:
-      container_name: netech-registrator
-      image: gliderlabs/registrator:master
-      env_file: ./consul/.env
-      network_mode: host
-      command: consul://$CONSUL_HTTP_ADDR
-      volumes:
-        - /var/run/docker.sock:/tmp/docker.sock
+  consul_server:
+    container_name: netech-consul-server
+    image: consul:1.0.1
+    network_mode: host
+    env_file:
+      - .env
 
 
 
-    app:
-      container_name: netech-app
-      build:
-        context: .
-        dockerfile: Dockerfile.app
-      depends_on:
-        - discovery
-      pid: host
-      image: noahedwardhall/noahedward:apptest
-      expose:
-        - 3000
-      dns: 169.254.1.1
-      env_file: ./consul/.env
-      environment:
-        - SERVICE_NAME=netech-app
+  discovery:
+    container_name: netech-registrator
+    image: gliderlabs/registrator:master
+    env_file:
+      - .env
+    network_mode: host
+    command: consul://$CONSUL_HTTP_ADDR
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    depends_on:
+      - consul_server
 
 
 
-    nginx:
-      dns: 169.254.1.1
-      env_file: ./consul/.env
-      environment:
-        - SERVICE_NAME=netech-nginx
-      container_name: netech-nginx
-      ports:
-        - "80:80"
-        #- "443:443"
-      pid: host
-      volumes:
-        - ./nginx/confs:/etc/nginx/conf.d
-        - /var/run/docker.sock:/tmp/docker.sock
-      image: noahedwardhall/noahedwardhall:nginxtest
-      build:
-        context: .
-        dockerfile: Dockerfile.nginx
-      depends_on:
-        - discovery
-        - app
+  app:
+    container_name: netech-app
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    depends_on:
+      - consul_server
+      - discovery
+    pid: host
+    image: noahedwardhall/noahedward:apptest
+    expose:
+      - 3000
+    dns: 169.254.1.1
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=netech-app
+
+
+
+  nginx:
+    dns: 169.254.1.1
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=netech-nginx
+    container_name: netech-nginx
+    ports:
+      - "80:80"
+      #- "443:443"
+    pid: host
+    volumes:
+      - ./nginx/confs:/etc/nginx/conf.d
+      - /var/run/docker.sock:/tmp/docker.sock
+    image: noahedwardhall/noahedwardhall:nginxtest
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    depends_on:
+      - app
+      - consul_server
+      - discovery
