@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   consul_server:
     container_name: netech-consul-server
     image: consul:1.0.1
@@ -15,6 +16,7 @@ services:
     env_file:
       - .env
     network_mode: host
+    dns: $DUMMY_INTERFACE_IP
     command: consul://$CONSUL_HTTP_ADDR
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
@@ -35,7 +37,7 @@ services:
     image: noahedwardhall/noahedward:apptest
     expose:
       - 3000
-    dns: 169.254.1.1
+    dns: $DUMMY_INTERFACE_IP
     env_file:
       - .env
     environment:
@@ -44,7 +46,7 @@ services:
 
 
   nginx:
-    dns: 169.254.1.1
+    dns: $DUMMY_INTERFACE_IP
     env_file:
       - .env
     environment:
