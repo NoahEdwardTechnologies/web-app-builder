@@ -29,7 +29,7 @@ services:
     container_name: netech-app
     build:
       context: .
-      dockerfile: Dockerfile.app
+      dockerfile: docker/Dockerfile.app
     depends_on:
       - consul_server
       - discovery
@@ -57,12 +57,12 @@ services:
       #- "443:443"
     pid: host
     volumes:
-      - ./nginx/confs:/etc/nginx/conf.d
+      #- ./nginx:/etc/nginx
       - /var/run/docker.sock:/tmp/docker.sock
     image: noahedwardhall/noahedwardhall:nginxtest
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: docker/Dockerfile.nginx
     depends_on:
       - app
       - consul_server

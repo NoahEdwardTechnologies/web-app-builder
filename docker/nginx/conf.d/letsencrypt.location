@@ -1,0 +1,9 @@
+# location for letsencrypt
+
+location /.well-known/acme-challenge {
+    allow all;
+    alias /etc/letsencrypt/webrootauth/.well-known/acme-challenge;
+    location ~ /.well-known/acme-challenge/(.*) {
+        add_header Content-Type application/jose+json;
+    }
+}
