@@ -205,7 +205,7 @@ RUN set -x && \
     mkdir -p /var/cache/nginx/pagespeed_temp && \
     chown nginx:nginx /var/cache/nginx/pagespeed_temp
 
-COPY docker/nginx /etc/nginx
+# COPY docker/nginx /etc/nginx
 
 STOPSIGNAL SIGTERM
 

@@ -7,6 +7,13 @@ services:
     network_mode: host
     env_file:
       - .env
+    expose:
+      - 8300
+      - 8301
+      - 8302
+      - 8500
+      - 8600
+
 
 
 
@@ -16,13 +23,14 @@ services:
     env_file:
       - .env
     network_mode: host
-    dns: $DUMMY_INTERFACE_IP
-    command: consul://$CONSUL_HTTP_ADDR
+    dns:
+      - $DUMMY_INTERFACE_IP
+      #- $BACKUP_INTERFACE_IP
+    command: -ip $DUMMY_INTERFACE_IP -internal consul://$CONSUL_HTTP_ADDR
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
     depends_on:
       - consul_server
-
 
 
   app:
@@ -33,11 +41,15 @@ services:
     depends_on:
       - consul_server
       - discovery
-    pid: host
+      - consul_template_nginx
+      - nginx
+    #pid: host
     image: noahedwardhall/noahedward:apptest
     expose:
       - 3000
-    dns: $DUMMY_INTERFACE_IP
+    dns:
+      - $DUMMY_INTERFACE_IP
+      #- $BACKUP_INTERFACE_IP
     env_file:
       - .env
     environment:
@@ -46,7 +58,9 @@ services:
 
 
   nginx:
-    dns: $DUMMY_INTERFACE_IP
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
     env_file:
       - .env
     environment:
@@ -55,15 +69,48 @@ services:
     ports:
       - "80:80"
       #- "443:443"
-    pid: host
+    #pid: host
+    expose:
+      - 80
     volumes:
-      #- ./nginx:/etc/nginx
+      - ./docker/nginx:/etc/nginx
       - /var/run/docker.sock:/tmp/docker.sock
     image: noahedwardhall/noahedwardhall:nginxtest
     build:
       context: .
       dockerfile: docker/Dockerfile.nginx
     depends_on:
-      - app
       - consul_server
       - discovery
+      - consul_template_nginx
+
+
+  consul_template_nginx:
+    depends_on:
+      - consul_server
+      - discovery
+    image: hashicorp/consul-template:alpine
+    command: /bin/consul-template -consul-addr=$CONSUL_HTTP_ADDR -wait=5s -config=/consul-template/config/nginx/app.hcl -log-level=debug
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME=netech-consul-template-nginx
+    container_name: netech-consul-template-nginx
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+      - ./docker/consultemplate/config:/consul-template/config
+      - ./docker/consultemplate/templates:/consul-template/templates
+
+
+
+#       docker run --rm --name consul-tpl -e CONSUL_TEMPLATE_LOG=debug  \
+# -v /var/run/docker.sock:/var/run/docker.sock  \
+# -v /usr/bin/docker:/usr/bin/docker  \
+# -v `pwd`/nginx_config/:/tmp/nginx_config  \
+# hashicorp/consul-template \
+# -template "/tmp/nginx_config/simple.ctmpl:/tmp/nginx_config/simple.conf:docker  \
+# kill -s HUP nginx" \
+# -consul-addr `docker inspect consul --format {{.NetworkSettings.Networks.bridge.IPAddress}}`:8500
