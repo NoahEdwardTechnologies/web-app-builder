@@ -4,7 +4,8 @@ include /etc/nginx/config/brotli.inc;
 
 upstream app {
  least_conn;
- server 127.0.0.1:65535; # force a 502
+ server 172.18.0.4:3000;
+ 
 }
 
 server {

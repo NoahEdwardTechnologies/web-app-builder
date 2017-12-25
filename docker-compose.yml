@@ -62,10 +62,10 @@ services:
     container_name: netech_nginx
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     expose:
       - "80"
-      # - "443"
+      - "443"
     volumes:
       - nginx:/etc/nginx
       - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
@@ -101,7 +101,7 @@ services:
       - consul_server
       - consul_template_nginx
       - nginx
-    image: noahedwardhall/noahedward:apptest
+    image: noahedwardhall/noahedwardhall:apptest
     expose:
       - "3000"
     dns:
@@ -120,7 +120,7 @@ services:
       - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
     entrypoint:
       - /tmp/wait-for-service.sh
-      - netech-nginx.service.consul
+      - netech-nginx-443.service.consul
       - "50"
       - "10"
       - node dist/node.main.js
