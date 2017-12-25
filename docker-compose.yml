@@ -1,59 +1,55 @@
-version: '3'
+version: '3.4'
 services:
 
+  # http://consul.service.consul:8500
   consul_server:
-    container_name: netech-consul-server
-    image: consul:1.0.1
-    network_mode: host
-    env_file:
-      - .env
-    expose:
-      - 8300
-      - 8301
-      - 8302
-      - 8500
-      - 8600
-
-
-
-
-  discovery:
-    container_name: netech-registrator
-    image: gliderlabs/registrator:master
-    env_file:
-      - .env
+    container_name: netech_consul_server
+    environment:
+      - SERVICE_NAME=consul
+    image: consul:1.0.2
     network_mode: host
     dns:
       - $DUMMY_INTERFACE_IP
-      #- $BACKUP_INTERFACE_IP
-    command: -ip $DUMMY_INTERFACE_IP -internal consul://$CONSUL_HTTP_ADDR
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock
-    depends_on:
-      - consul_server
+      - $BACKUP_INTERFACE_IP
+    command: consul agent -server -ui -bootstrap -enable-script-checks -client=$DUMMY_INTERFACE_IP -bind=$DUMMY_INTERFACE_IP -data-dir=/tmp/consul
+    env_file:
+      - .env
+    expose:
+      - "8300"
+      - "8301"
+      - "8302"
+      - "8400"
+      - "8500"
+      - "8600"
+      - "53"
 
 
-  app:
-    container_name: netech-app
+  consul_template_nginx:
     build:
       context: .
-      dockerfile: docker/Dockerfile.app
+      dockerfile: docker/Dockerfile.consultemplate
+    image: noahedwardhall/noahedwardhall:consultemplatetest
     depends_on:
       - consul_server
-      - discovery
-      - consul_template_nginx
-      - nginx
-    #pid: host
-    image: noahedwardhall/noahedward:apptest
-    expose:
-      - 3000
+      # - registrator
+    command: /bin/consul-template -consul-addr=$CONSUL_HTTP_ADDR -wait=5s -config=/consul-template/config/nginx/app.hcl -log-level=info
     dns:
       - $DUMMY_INTERFACE_IP
-      #- $BACKUP_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
     env_file:
       - .env
     environment:
-      - SERVICE_NAME=netech-app
+      - DOCKER_HOST=$DOCKER_DAEMON_ADDR
+      - SERVICE_NAME=netech-nginx-template
+      # - SERVICE_IGNORE=true
+    container_name: netech_consul_template_nginx
+    volumes:
+      - nginx:/etc/nginx
+      - /var/run/docker.sock:/tmp/docker.sock
+      - ./docker/consultemplate/config:/consul-template/config
+      - ./docker/consultemplate/templates:/consul-template/templates
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
 
 
 
@@ -63,54 +59,92 @@ services:
       - $BACKUP_INTERFACE_IP
     env_file:
       - .env
-    environment:
-      - SERVICE_NAME=netech-nginx
-    container_name: netech-nginx
+    container_name: netech_nginx
     ports:
       - "80:80"
-      #- "443:443"
-    #pid: host
+      # - "443:443"
     expose:
-      - 80
+      - "80"
+      # - "443"
     volumes:
-      - ./docker/nginx:/etc/nginx
-      - /var/run/docker.sock:/tmp/docker.sock
+      - nginx:/etc/nginx
+      - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
     image: noahedwardhall/noahedwardhall:nginxtest
     build:
       context: .
       dockerfile: docker/Dockerfile.nginx
     depends_on:
       - consul_server
-      - discovery
       - consul_template_nginx
+    environment:
+      - SERVICE_NAME=netech-nginx
+      - SERVICE_TAGS=nginx,load_balancer
+      # - SERVICE_CHECK_HTTP=/health
+      # - SERVICE_CHECK_INTERVAL=15s
+      # - SERVICE_CHECK_TIMEOUT=1s
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+    entrypoint:
+      - /tmp/wait-for-service.sh
+      - consul-8300.service.consul
+      - "50"
+      - "10"
+      - nginx
 
 
-  consul_template_nginx:
+  app:
+    container_name: netech_app
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
     depends_on:
       - consul_server
-      - discovery
-    image: hashicorp/consul-template:alpine
-    command: /bin/consul-template -consul-addr=$CONSUL_HTTP_ADDR -wait=5s -config=/consul-template/config/nginx/app.hcl -log-level=debug
+      - consul_template_nginx
+      - nginx
+    image: noahedwardhall/noahedward:apptest
+    expose:
+      - "3000"
     dns:
       - $DUMMY_INTERFACE_IP
       - $BACKUP_INTERFACE_IP
     env_file:
       - .env
     environment:
-      - SERVICE_NAME=netech-consul-template-nginx
-    container_name: netech-consul-template-nginx
+      - SERVICE_NAME=netech-app
+      # - SERVICE_CHECK_HTTP=/health
+      # - VIRTUAL_HOST=noahedward.com
+      - SERVICE_TAGS=production,node
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+    volumes:
+      - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
+    entrypoint:
+      - /tmp/wait-for-service.sh
+      - netech-nginx.service.consul
+      - "50"
+      - "10"
+      - node dist/node.main.js
+
+
+  registrator:
+    container_name: netech_registrator
+    image: gliderlabs/registrator:master
+    network_mode: host
+    env_file:
+      - .env
+    dns:
+      - $DUMMY_INTERFACE_IP
+    command: -explicit -internal -deregister "always" -retry-attempts 100 -retry-interval 1000 -ip $DUMMY_INTERFACE_IP consul://$CONSUL_HTTP_ADDR
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock
-      - ./docker/consultemplate/config:/consul-template/config
-      - ./docker/consultemplate/templates:/consul-template/templates
+    depends_on:
+      - app
+      - consul_server
+      - consul_template_nginx
+      - nginx
 
 
 
-#       docker run --rm --name consul-tpl -e CONSUL_TEMPLATE_LOG=debug  \
-# -v /var/run/docker.sock:/var/run/docker.sock  \
-# -v /usr/bin/docker:/usr/bin/docker  \
-# -v `pwd`/nginx_config/:/tmp/nginx_config  \
-# hashicorp/consul-template \
-# -template "/tmp/nginx_config/simple.ctmpl:/tmp/nginx_config/simple.conf:docker  \
-# kill -s HUP nginx" \
-# -consul-addr `docker inspect consul --format {{.NetworkSettings.Networks.bridge.IPAddress}}`:8500
+volumes:
+    nginx:
+      external: true

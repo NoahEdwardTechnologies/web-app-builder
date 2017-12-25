@@ -1,0 +1,12 @@
+FROM hashicorp/consul-template:alpine
+
+RUN echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories && \
+  apk add --update --no-cache shadow;
+
+
+RUN set -x && \
+  addgroup docker && \
+  usermod -o -u 1000 -a -G docker consul-template;
+
+#RUN touch /tmp/docker.sock; \
+#  chown :docker /tmp/docker.sock && exit 0;

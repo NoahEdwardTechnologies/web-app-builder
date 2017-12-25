@@ -1,7 +1,7 @@
 template {
   source = "/consul-template/templates/nginx/app.tpl"
-  destination = "/consul-template/data/nginx/app.conf"
+  destination = "/etc/nginx/conf.d/app.conf"
   create_dest_dirs = true
   backup = true
-  command = "echo done writing file; ls /consul-template/data/nginx"
+  command = "curl -X POST http://169.254.1.1:2375/containers/netech_nginx/kill -d signal=HUP"
 }
