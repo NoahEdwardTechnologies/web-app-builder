@@ -1,0 +1,32 @@
+FROM alpine:3.6
+
+RUN set -x \
+  && echo http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories \
+  && apk --no-cache --update add \
+    ca-certificates \
+    curl \
+    dcron \
+    netcat-openbsd \
+    openssl \
+    shadow \
+  && adduser -D -u 1000 acmeuser \
+  && mkdir -p /var/log/cron \
+    && mkdir -m 0774 -p /var/spool/cron/crontabs \
+    && touch /var/log/cron/cron.log \
+    && mkdir -m 0774 -p /etc/cron.d \
+    && chmod -R 0770 /var/spool/cron \
+    && chmod -R 0770 /etc/crontabs \
+    && chmod -R 0770 /etc/cron.d \
+    && chmod -R 0770 /var/log \
+    && chown -R :acmeuser /etc/cron.d \
+    && chown -R :acmeuser /etc/crontabs \
+    && chown -R :acmeuser /usr/sbin/crond \
+    && chown -R :acmeuser /usr/bin/crontab \
+    && chown -R :acmeuser /var/log \
+    && chown -R :acmeuser /var/spool/cron
+
+USER acmeuser
+
+RUN cd ~ \
+  && touch ~/.profile \
+  && curl https://get.acme.sh | sh;
