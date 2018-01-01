@@ -8,17 +8,25 @@ s="$3"
 shift 3
 cmd="$@"
 
-echo "service is ${service}"
-echo "cmd is ${cmd}"
-echo "n is ${n}"
+# echo "service is ${service}"
+# echo "cmd is ${cmd}"
+# echo "n is ${n}"
+
+# curl --help
+# wget --help
 
 echo "sleeping for 60";
-# sleep 60s;
 echo "done sleeping";
+
+
+# different ways to get leader ip
+# curl http://169.254.1.1:8500/v1/status/leader
+# wget -s consul.service.consul:8500/v1/status/leader
+# wget -s consul.service.consul:8500/v1/operator/raft/configuration?stale=true
 
 while [ $n -gt 0 ];
 do
-  ping -c1 $service > /dev/null && exec $cmd && exit 0 || echo "restarting ping for ${service}, n is ${n}";
+  $service > /dev/null && exec $cmd && exit 0 || echo "failed: restarting health check, n is ${n}";
   let n=n-1;
   sleep $s;
 done
