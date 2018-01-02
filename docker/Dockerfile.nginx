@@ -11,6 +11,8 @@ ENV NPS_VER 1.12.34.3
 ENV NGX_BROTLI_COMMIT bfd2885b2da4d763fed18f49216bb935223cd34b
 
 RUN set -x && \
+  addgroup -S nginx && \
+  adduser -D -S -h /var/cache/nginx -s /sbin/nologin -u 1000 nginx nginx && \
   apk --no-cache --update add \
     apr \
     apr-util \
@@ -113,8 +115,6 @@ RUN set -x && \
     --add-module=/usr/src/ngx_brotli \
                 --with-cc-opt=-Wno-error \
 	" \
-	&& addgroup -S nginx \
-	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
 	&& curl -fSL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz -o nginx.tar.gz \
 	&& curl -fSL http://nginx.org/download/nginx-$NGINX_VERSION.tar.gz.asc  -o nginx.tar.gz.asc \
 	&& export GNUPGHOME="$(mktemp -d)" \
@@ -205,10 +205,6 @@ RUN set -x && \
     mkdir -p /var/cache/nginx/pagespeed_temp && \
     chown nginx:nginx /var/cache/nginx/pagespeed_temp
 
-COPY nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 80 443
-
 STOPSIGNAL SIGTERM
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx"]

@@ -1,0 +1,184 @@
+version: '3.4'
+services:
+
+  # http://consul.service.consul:8500
+  consul_server:
+    container_name: netech_consul_server
+    environment:
+      - SERVICE_NAME=consul
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+    image: consul:1.0.2
+    network_mode: host
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    command: consul agent -server -ui -bootstrap -enable-script-checks -client=$DUMMY_INTERFACE_IP -bind=$DUMMY_INTERFACE_IP -data-dir=/tmp/consul
+    expose:
+      - "8300"
+      - "8301"
+      - "8302"
+      - "8400"
+      - "8500"
+      - "8600"
+      - "53"
+
+
+
+
+  consul_template_nginx:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.consultemplate
+    image: noahedwardhall/noahedwardhall:consultemplatetest
+    depends_on:
+      - consul_server
+    command: /bin/consul-template -consul-addr=$CONSUL_HTTP_ADDR -wait=5s -config=/consul-template/config/nginx/app.hcl -log-level=info
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    environment:
+      - DOCKER_HOST=$DOCKER_DAEMON_ADDR
+      - SERVICE_NAME=netech-nginx-template
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+    container_name: netech_consul_template_nginx
+    volumes:
+      - nginx:/etc/nginx
+      - /var/run/docker.sock:/tmp/docker.sock
+      - ./docker/consultemplate/config:/consul-template/config
+      - ./docker/consultemplate/templates:/consul-template/templates
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+
+
+  nginx:
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    container_name: netech_nginx
+    expose:
+      - "80"
+    volumes:
+      - nginx:/etc/nginx
+      - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
+    image: noahedwardhall/noahedwardhall:nginxtest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nginx
+    depends_on:
+      - consul_server
+      - consul_template_nginx
+    environment:
+      - SERVICE_NAME=netech-nginx
+      - SERVICE_TAGS=nginx,load_balancer
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+      # - SERVICE_CHECK_HTTP=/health
+      # - SERVICE_CHECK_INTERVAL=15s
+      # - SERVICE_CHECK_TIMEOUT=1s
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+    entrypoint:
+      - /tmp/wait-for-service.sh
+      # - consul-8500.service.consul
+      - wget -s consul.service.consul:8500/v1/operator/raft/configuration?stale=true
+      - "50"
+      - "10"
+      - nginx
+
+
+  haproxy_lb:
+    image: haproxy:1.8.2-alpine
+    depends_on:
+      - consul_server
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    environment:
+      - SERVICE_NAME=netech-haproxy-lb
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+    container_name: netech_haproxy_lb
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+    ports:
+      - 80:80
+      - 443:443
+    expose:
+      - "80"
+      - "443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/docker/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+
+
+  app:
+    container_name: netech_app
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.app
+    depends_on:
+      - consul_server
+      - consul_template_nginx
+      - nginx
+    image: noahedwardhall/noahedwardhall:apptest
+    expose:
+      - "3000"
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    environment:
+      - SERVICE_NAME=netech-app
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+      # - SERVICE_CHECK_HTTP=/health
+      # - VIRTUAL_HOST=noahedward.com
+      - SERVICE_TAGS=production,node
+    labels:
+      - registratorip=$DUMMY_INTERFACE_IP
+    volumes:
+      - $PWD/docker/wait-for-service.sh:/tmp/wait-for-service.sh
+    entrypoint:
+      - /tmp/wait-for-service.sh
+      - ping -c1 netech-nginx.service.consul
+      - "50"
+      - "10"
+      - node dist/node.main.js
+
+
+  registrator:
+    container_name: netech_registrator
+    image: gliderlabs/registrator:master
+    network_mode: host
+    dns:
+      - $DUMMY_INTERFACE_IP
+      - $BACKUP_INTERFACE_IP
+    command: -explicit -internal -deregister "always" -retry-attempts 100 -retry-interval 1000 -ip $DUMMY_INTERFACE_IP consul://$CONSUL_HTTP_ADDR
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock
+    depends_on:
+      - app
+      - consul_server
+      - consul_template_nginx
+      - nginx
+      - haproxy_lb
+    environment:
+      - APP_ENV
+      - CONSUL_HTTP_ADDR
+      - CONSUL_RPC_ADDR
+
+
+
+volumes:
+    nginx:
+      driver: local
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: "${PWD}/docker/nginx"

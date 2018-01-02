@@ -1,0 +1,10 @@
+response=$(curl 169.254.1.1:8500/v1/catalog/service/global-redis-check?tag=web);
+
+if [ "[]" == "${response}" ]
+then
+  echo "response null"
+  exit 1
+else
+  echo "response is good"
+  exit 0
+fi
