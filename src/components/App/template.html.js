@@ -16,8 +16,8 @@ export default function htmlTemplate (params) {
         ${params.htmlWebpackPlugin.options.ssr ? '<script>window.__INIT_STATE__= __SSR_STATE__</script>' : ''}
       </head>
       <body>
+        <div id="two"></div>
         <div id="root">${params.htmlWebpackPlugin.options.ssr ? '__SSR_APP__' : ''}</div>
-        <div id="two">hello</div>
       </body>
     </html>
   `;
