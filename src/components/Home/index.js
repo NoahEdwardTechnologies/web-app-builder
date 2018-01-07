@@ -1,15 +1,15 @@
 /* eslint-disable */
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import blah from 'appstore/api/blah/action';
 import Landing from './Landing';
 import React from 'react';
 import styles from './index.css';
 
+
 export class Home extends React.Component {
   handleBlah = () => this.props.doBlah(Math.random())
 
   render() {
-    console.log('props.blah are', this.props.blah)
     return (
       <div className={styles.home}>
         <Landing />

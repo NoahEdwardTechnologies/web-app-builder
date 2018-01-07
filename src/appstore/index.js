@@ -6,6 +6,13 @@ import * as reducers from './api/**/*reducer.js';
 import initialState from './initialState';
 import thunk from 'redux-thunk';
 
+
+import createSagaMiddleware from 'redux-saga'
+
+const sagaMiddleware = createSagaMiddleware()
+
+export { sagaMiddleware };
+
 export default function storeCreator(history) {
   const useDevTools = !!(
     typeof window !== 'undefined'
@@ -41,7 +48,8 @@ export default function storeCreator(history) {
     composeEnhancers(
       applyMiddleware(
         routerMiddleware(history),
-        thunk
+        thunk,
+        sagaMiddleware,
       )
     )
   );

@@ -5,11 +5,15 @@ import AppSSR from 'components/App/Server';
 import createHistory from 'history/createMemoryHistory';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import storeCreator from 'appstore';
+import storeCreator, { sagaMiddleware } from 'appstore';
 
 const store = storeCreator(createHistory());
+import rootSaga from 'appstore/api/sagas/counter.js';
+
 
 export default function reactHandler (req, res, next) {
+
+  const promises = [];
   const staticContext = {};
 
   const appHtml = ReactDOMServer.renderToString(
@@ -19,6 +23,9 @@ export default function reactHandler (req, res, next) {
       store={store}
     />
   );
+
+  // TODO: setup 
+  // sagaMiddleware.run(rootSaga);
 
   const responseHtml = req.app.locals.indexHtml
     .replace('__SSR_APP__', appHtml)

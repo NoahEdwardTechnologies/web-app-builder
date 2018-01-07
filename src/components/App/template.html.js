@@ -13,10 +13,9 @@ export default function htmlTemplate (params) {
         <!-- Disable tap highlight on IE -->
         <meta name="msapplication-tap-highlight" content="no">
         <title>${params.htmlWebpackPlugin.options.title}</title>
-        ${params.htmlWebpackPlugin.options.ssr ? '<script>window.__INIT_STATE__= __SSR_STATE__</script>' : ''}
+        ${params.htmlWebpackPlugin.options.ssr ? '<script>window.__INIT_STATE__ = __SSR_STATE__</script>' : ''}
       </head>
       <body>
-        <div id="two"></div>
         <div id="root">${params.htmlWebpackPlugin.options.ssr ? '__SSR_APP__' : ''}</div>
       </body>
     </html>

@@ -10,14 +10,15 @@ import { render, hydrate } from 'react-dom';
 import App from 'components/App/Client';
 import createHistory from 'history/createBrowserHistory';
 import React from 'react';
-import storeCreator from 'appstore';
 
+import storeCreator, { sagaMiddleware } from 'appstore';
 
-import Main from 'components/AppSaga/main';
-
-Main();
 const history = createHistory();
 const store = storeCreator(history);
+
+import rootSaga from 'appstore/api/sagas/counter.js';
+
+sagaMiddleware.run(rootSaga);
 
 const renderFunction = process.env.SSR === true
   ? hydrate
@@ -25,11 +26,9 @@ const renderFunction = process.env.SSR === true
 
 function renderComponent (Component) {
   renderFunction(
-    <div>
-      <AppContainer>
-        <Component history={history} store={store} />
-      </AppContainer>
-    </div>,
+    <AppContainer>
+      <Component history={history} store={store} />
+    </AppContainer>,
     document.getElementById('root')
   );
 }
@@ -38,12 +37,7 @@ renderComponent(App);
 
 // echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 // https://stackoverflow.com/questions/26708205/webpack-watch-isnt-compiling-changed-files
-if (module && module.hot) {
+if (module && module.hot)
   module.hot.accept('components/App/Client', () =>
     renderComponent(require('components/App/Client').default)
   );
-  module.hot.accept('components/AppSaga/main', () =>
-    require('components/AppSaga/main').default()
-  );
-
-}

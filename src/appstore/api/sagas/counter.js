@@ -1,4 +1,6 @@
 /* eslint-disable */
+// checkout https://github.com/redux-saga/redux-saga/blob/master/docs/introduction/BeginnerTutorial.md
+
 import { delay } from 'redux-saga'
 import { put, takeEvery, all } from 'redux-saga/effects'
 
