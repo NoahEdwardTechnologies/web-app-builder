@@ -1,20 +1,19 @@
 /* eslint-disable */
 import React from 'react'
 
-const Counter = ({ value, onIncrement, onDecrement, onIncrementAsync }) =>
+const Counter = ({ value, sagaAction }) =>
       <div>
-        <button onClick={onIncrementAsync}>
+        <button onClick={() => sagaAction('INCREMENT_ASYNC')}>
           Increment after 1 seconds
         </button>
         {' '}
-        <button onClick={onIncrement}>
+        <button onClick={() => sagaAction('INCREMENT')}>
           Increments
         </button>
         {' '}
-        <button onClick={onDecrement}>
+        <button onClick={() => sagaAction('DECREMENT')}>
           Decrement
         </button>
-        <hr />
         <div>
           Clicked: {value} times
         </div>

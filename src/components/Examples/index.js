@@ -1,24 +1,29 @@
 /* eslint-disable */
 import { connect } from 'react-redux';
-import Counter from 'components/Counter';
+import CountdownTimer from 'components/Shared/CountdownTimer';
+import Counter from 'components/Shared/Counter';
 import React from 'react';
 
-
 export class Examples extends React.Component {
-  CounterSaga = () => (
-    <Counter
-      onDecrement={() => this.props.sagaAction('DECREMENT')}
-      onIncrement={() => this.props.sagaAction('INCREMENT')}
-      onIncrementAsync={() => this.props.sagaAction('INCREMENT_ASYNC')}
-      value={this.props.counter}
-    />
-  )
 
   render () {
     return (
       <div>
-        <h1>Counter</h1>
-        {this.CounterSaga()}
+        <h1>Various Examples</h1>
+        <article>
+          <h2>Counter</h2>
+          <Counter
+            sagaAction={this.props.sagaAction}
+            value={this.props.counter}
+          />
+        </article>
+        <article>
+          <h2>Countdown Timer</h2>
+          <CountdownTimer
+            sagaAction={this.props.sagaAction}
+            value={this.props.counter}
+          />
+        </article>
       </div>
     );
   }
