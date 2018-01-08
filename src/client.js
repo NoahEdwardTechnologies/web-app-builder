@@ -16,7 +16,7 @@ import storeCreator, { sagaMiddleware } from 'appstore';
 const history = createHistory();
 const store = storeCreator(history);
 
-import rootSaga from 'appstore/api/sagas/counter.js';
+import rootSaga from 'appstore/api/sagas';
 
 sagaMiddleware.run(rootSaga);
 

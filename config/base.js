@@ -20,14 +20,17 @@ export default function base (
         'classnames',
         'cq-prolyfill',
         // 'css-element-queries', // use cq-prolyfill instead, but keep this just in case cq-prolyfill has performance issues
+        'moment-duration-format',
+        'moment',
         'react-dom',
         'react-redux',
         'react-router-dom',
         'react-router-redux',
         'react-table', // remove this and use antd.table
         'react',
-        'redux-thunk',
+        'react-countdown-clock',
         'recompose',
+        'redux-thunk',
         'redux',
         'reselect',
         'store',

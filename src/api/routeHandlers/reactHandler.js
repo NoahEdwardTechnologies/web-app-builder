@@ -8,7 +8,7 @@ import ReactDOMServer from 'react-dom/server';
 import storeCreator, { sagaMiddleware } from 'appstore';
 
 const store = storeCreator(createHistory());
-import rootSaga from 'appstore/api/sagas/counter.js';
+import rootSaga from 'appstore/api/sagas';
 
 
 export default function reactHandler (req, res, next) {
@@ -24,7 +24,7 @@ export default function reactHandler (req, res, next) {
     />
   );
 
-  // TODO: setup 
+  // TODO: setup
   // sagaMiddleware.run(rootSaga);
 
   const responseHtml = req.app.locals.indexHtml

@@ -1,5 +1,5 @@
 /* eslint-disable */
-export default function counter(state = 0, action) {
+export default function counterSaga (state = 0, action) {
   switch (action.type) {
     case 'INCREMENT':
       return state + 1

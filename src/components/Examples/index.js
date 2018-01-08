@@ -21,7 +21,7 @@ export class Examples extends React.Component {
           <h2>Countdown Timer</h2>
           <CountdownTimer
             sagaAction={this.props.sagaAction}
-            value={this.props.counter}
+            value={this.props.countdownTimer}
           />
         </article>
       </div>
@@ -29,7 +29,10 @@ export class Examples extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({ counter: state.counterSaga });
+const mapStateToProps = state => ({
+  countdownTimer: state.countdownTimerSaga,
+  counter: state.counterSaga,
+});
 
 const mapDispatchToProps = dispatch => ({
   sagaAction (type) {
