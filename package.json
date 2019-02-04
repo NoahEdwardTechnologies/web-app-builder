@@ -22,6 +22,7 @@
     "url": "https://github.com/NoahEdwardTechnologies/web-app-builder.git"
   },
   "scripts": {
+    "barebones-client": "NODE_ENV=development webpack-dev-server --config webpack.config.babel.js --env.platform=web --env.ssr=false --env.port=3000 --env.host=0.0.0.0 --env.emitFiles=true --debug --progress",
     "ssr": "NODE_ENV=development babel-node -- ./ssr.js",
     "client": "NODE_ENV=development webpack-dev-server --config webpack.config.babel.js --env.platform=web --env.ssr=false --env.port=3000 --env.host=0.0.0.0 --env.emitFiles=true --debug --progress",
     "prodclient": "NODE_ENV=production webpack --config webpack.config.babel.js --env.platform=web --env.ssr=true --env.emitFiles=true --env.port=3000 --env.host=0.0.0.0 --progress",
@@ -37,7 +38,7 @@
     "linux"
   ],
   "dependencies": {
-    "antd": "^2.13.6",
+    "antd": "3.13.1",
     "axios": "^0.17.0",
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
