@@ -12,7 +12,9 @@ import alterHtmlWebpackPlugin from './alterHtmlWebpackPlugin';
 import WriteFilePlugin from 'write-file-webpack-plugin';
 
 export default function plugins(options) {
-  const config = { plugins: [] };
+  const config = {
+    plugins: []
+  };
 
   const getHashedModulesIdsPluginConfig = () => ({
     hashDigest: 'hex',
@@ -36,31 +38,33 @@ export default function plugins(options) {
   });
 
   switch (options.env) {
-    case 'development': {
-      config.plugins.push(
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin(),
-      )
-      break;
-    }
+    case 'development':
+      {
+        config.plugins.push(
+          new webpack.HotModuleReplacementPlugin(),
+          new webpack.NamedModulesPlugin(),
+        )
+        break;
+      }
 
-    case 'production': {
-      config.plugins.push(
-        new UglifyJSPlugin(getUglifyJsPluginConfig()),
-        new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-      );
-    }
+    case 'production':
+      {
+        config.plugins.push(
+          new UglifyJSPlugin(getUglifyJsPluginConfig()),
+          new webpack.HashedModuleIdsPlugin(getHashedModulesIdsPluginConfig()),
+          new webpack.NoEmitOnErrorsPlugin(),
+          new webpack.optimize.ModuleConcatenationPlugin(),
+        );
+      }
   }
 
   // TODO: complete this
   if (options.http2Server) {
     config.plugins.push(
       new webpack.optimize.AggressiveSplittingPlugin({
-  			minSize: 30000,
-  			maxSize: 50000
-  		}),
+        minSize: 30000,
+        maxSize: 50000
+      }),
     )
   }
 
@@ -75,14 +79,16 @@ export default function plugins(options) {
       'process.env.PUBLIC_DIR_PATH': JSON.stringify(options.pathPublic),
       'process.env.SSR': JSON.stringify(options.ssr),
       [`process.env.${options.platform.toUpperCase()}_PORT`]: JSON.stringify(options.port),
-     }),
+    }),
 
     // exports webpack asset manifest in json format
-    new WebpackManifestPlugin({...options.WebpackManifestPluginConfig}),
+    new WebpackManifestPlugin({
+      ...options.WebpackManifestPluginConfig
+    }),
 
   );
 
-  if ( options.isWeb )
+  if (options.isWeb)
     config.plugins.push(
 
       new HtmlWebpackPlugin({
@@ -104,7 +110,9 @@ export default function plugins(options) {
       // create PWA manifest
       // https://developer.mozilla.org/en-US/docs/Web/Manifest
       // exports json
-      new WebpackPwaManifest({ ...options.webpackPwaManifestConfig }),
+      new WebpackPwaManifest({
+        ...options.webpackPwaManifestConfig
+      }),
 
       //splitout options.dependencies
       //TODO: get from /starter/config/plugins
@@ -113,19 +121,25 @@ export default function plugins(options) {
         minChunks(module) {
           // This prevents stylesheet resources with the .css or .scss extension
           // from being moved from their original chunk to the vendor chunk
-          return (module.resource && (/^.*\.(css|scss)$/).test(module.resource))
-            ? false
-            : true
+          return (module.resource && (/^.*\.(css|scss)$/)
+              .test(module.resource)) ?
+            false :
+            true
         }
       }),
 
       // splitout webpack boilerplate
-      new webpack.optimize.CommonsChunkPlugin({ name: 'runtime', minChunks: Infinity }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'runtime',
+        minChunks: Infinity
+      }),
 
     );
   else if (options.isNode)
     config.plugins.push(
-      new webpack.DefinePlugin({ 'process.env.NODE_PORT': JSON.stringify(options.port) }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_PORT': JSON.stringify(options.port)
+      }),
       new webpack.BannerPlugin({
         banner: 'require("source-map-support").install();',
         raw: true,
@@ -140,7 +154,9 @@ export default function plugins(options) {
 
   if (options.emitFiles || options.isProd) {
     config.plugins.push(
-      new webpack.DefinePlugin({ 'process.env.EMIT_FILES': JSON.stringify(true) })
+      new webpack.DefinePlugin({
+        'process.env.EMIT_FILES': JSON.stringify(true)
+      })
     )
   }
 
